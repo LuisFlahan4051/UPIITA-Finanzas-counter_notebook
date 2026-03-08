@@ -13,8 +13,17 @@
     "windows": [
       {
         "title": "counter_notebook",
-        "width": 800,
-        "height": 600
+        "width": 1200,
+        "height": 800
+      },
+      {
+        "title": "Nuevo Movimiento",
+        "width": 560,
+        "height": 420,
+        "label": "new_movement",
+        "visible": false,
+        "resizable": false,
+        "center": true
       }
     ],
     "security": {
