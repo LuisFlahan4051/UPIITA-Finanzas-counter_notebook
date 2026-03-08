@@ -182,8 +182,6 @@ Incluye:
 
 ## Capturas de la Interfaz
 
-Reemplaza los enlaces por tus imagenes reales.
-
 [![Demo en YouTube](./docs/screenshots/Captura-1.png)](https://youtu.be/enp9OUg5y80)
 
 ![Captura 2 - Registro de movimientos](./docs/screenshots/Captura-2.png)
