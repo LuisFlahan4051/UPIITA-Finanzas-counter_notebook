@@ -11,7 +11,9 @@ import {
   MovementLine,
 } from "./data/movements";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, FileDown, FileUp, FileJson } from "lucide-react";
+import { invoke } from "@tauri-apps/api/core";
+import { save, open } from "@tauri-apps/plugin-dialog";
 
 interface SumRow {
   movimiento: string;
@@ -50,6 +52,134 @@ function App() {
           : movement,
       ),
     );
+  };
+
+  const handleExportToExcel = async () => {
+    try {
+      // Mostrar diálogo de guardar archivo
+      const filePath = await save({
+        defaultPath: "movimientos_contables.xlsx",
+        filters: [
+          {
+            name: "Excel",
+            extensions: ["xlsx"],
+          },
+        ],
+      });
+
+      if (!filePath) return; // Usuario canceló
+
+      // Enviar datos a Rust para generar Excel
+      await invoke("export_to_excel", {
+        movements: movements,
+        summaries: conceptSummaries,
+        filePath: filePath,
+      });
+
+      alert("Excel generado exitosamente");
+    } catch (error) {
+      console.error("Error al exportar:", error);
+      alert("Error al generar el Excel: " + error);
+    }
+  };
+
+  const handleExportToJSON = async () => {
+    try {
+      // Mostrar diálogo de guardar archivo
+      const filePath = await save({
+        defaultPath: "movimientos_contables.json",
+        filters: [
+          {
+            name: "JSON",
+            extensions: ["json"],
+          },
+        ],
+      });
+
+      if (!filePath) return; // Usuario canceló
+
+      // Crear objeto con movimientos y sumas
+      const exportData = {
+        movements: movements,
+        summaries: conceptSummaries,
+      };
+
+      // Convertir a JSON con formato
+      const jsonContent = JSON.stringify(exportData, null, 2);
+
+      // Guardar archivo
+      await invoke("write_json_file", {
+        content: jsonContent,
+        filePath: filePath,
+      });
+
+      alert("JSON exportado exitosamente");
+    } catch (error) {
+      console.error("Error al exportar JSON:", error);
+      alert("Error al generar el JSON: " + error);
+    }
+  };
+
+  const handleImportFromJSON = async () => {
+    try {
+      // Mostrar diálogo de abrir archivo
+      const filePath = await open({
+        multiple: false,
+        filters: [
+          {
+            name: "JSON/TypeScript",
+            extensions: ["json", "ts"],
+          },
+        ],
+      });
+
+      if (!filePath) return; // Usuario canceló
+
+      // Leer archivo
+      const content = await invoke<string>("read_json_file", {
+        filePath: filePath,
+      });
+
+      // Si es archivo .ts, intentar extraer el JSON
+      let jsonContent = content;
+      if (typeof filePath === "string" && filePath.endsWith(".ts")) {
+        // Buscar el array de movementsData en archivos TypeScript
+        const movementsMatch = content.match(
+          /export\s+const\s+movementsData\s*:\s*Movement\[\]\s*=\s*(\[[\s\S]*?\]);/,
+        );
+        if (movementsMatch) {
+          jsonContent = movementsMatch[1];
+        } else {
+          throw new Error(
+            "No se encontró el array movementsData en el archivo TypeScript",
+          );
+        }
+      }
+
+      // Parsear JSON
+      const importedData = JSON.parse(jsonContent);
+
+      // Si es un objeto con la propiedad movements, usar esa
+      const importedMovements = importedData.movements
+        ? importedData.movements
+        : Array.isArray(importedData)
+          ? importedData
+          : [];
+
+      if (importedMovements.length === 0) {
+        throw new Error("No se encontraron movimientos en el archivo");
+      }
+
+      // Actualizar estado (las sumas se regeneran automáticamente)
+      setMovements(importedMovements);
+
+      alert(
+        `Importados ${importedMovements.length} movimiento(s) exitosamente`,
+      );
+    } catch (error) {
+      console.error("Error al importar:", error);
+      alert("Error al importar el archivo: " + error);
+    }
   };
 
   const conceptSummaries = useMemo<ConceptSummary[]>(() => {
@@ -109,10 +239,7 @@ function App() {
           <h1 className="text-3xl font-bold tracking-tight">
             Registro de Movimientos Contables
           </h1>
-          {/* <Button variant="default" size="sm">
-            <Plus className="mr-2 h-4 w-4" />
-            Nuevo Movimiento
-          </Button> */}
+          <h2>App creada por: Ing. Melendez Bustamante Luis Fernando.</h2>
         </div>
 
         {/* Grid de dos columnas: Movements y Sums */}
@@ -175,6 +302,33 @@ function App() {
           <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-black-700">
             Capital
           </span>
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={handleExportToExcel}
+            className="hover:cursor-pointer"
+          >
+            <FileDown className="mr-2 h-4 w-4" />
+            Exportar a Excel
+          </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={handleExportToJSON}
+            className="hover:cursor-pointer"
+          >
+            <FileJson className="mr-2 h-4 w-4" />
+            Exportar JSON
+          </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={handleImportFromJSON}
+            className="hover:cursor-pointer"
+          >
+            <FileUp className="mr-2 h-4 w-4" />
+            Importar JSON
+          </Button>
         </div>
       </div>
     </div>
