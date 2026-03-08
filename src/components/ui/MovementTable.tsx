@@ -10,12 +10,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowDown, ArrowLeftRight, ArrowUp, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-interface MovementLine {
-  concepto: string;
-  cargo: number | string;
-  abono: number | string;
-}
+import { accountsTypes, AccountType, MovementLine } from "@/data/movements";
 
 type NumericField = "cargo" | "abono";
 
@@ -23,19 +18,24 @@ interface MovementTableProps {
   title: string;
   lines: MovementLine[];
   onLinesChange?: (lines: MovementLine[]) => void;
-  conceptOptions?: string[];
 }
 
-const DEFAULT_CONCEPT_OPTIONS = [
-  "Caja",
-  "Bancos",
-  "Clientes",
-  "Proveedores",
-  "Inventario",
-  "Ventas",
-  "Compras",
-  "Capital",
-];
+type AccountOption = {
+  [T in AccountType]: {
+    type: T;
+    concepto: (typeof accountsTypes)[T][number];
+  };
+}[AccountType];
+
+const ACCOUNT_OPTIONS: AccountOption[] = (
+  Object.keys(accountsTypes) as AccountType[]
+).flatMap(
+  (type) =>
+    accountsTypes[type].map((concepto) => ({
+      type,
+      concepto,
+    })) as AccountOption[],
+);
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -67,23 +67,57 @@ const formatCurrencyDisplay = (value: number | string): string => {
   return currencyFormatter.format(numericValue);
 };
 
+const getTypeTextClass = (type: AccountType): string => {
+  switch (type) {
+    case "Ingreso":
+      return "text-blue-700";
+    case "Egreso":
+      return "text-violet-700";
+    case "Activo":
+      return "text-green-700";
+    case "Pasivo":
+      return "text-red-700";
+    case "Capital":
+      return "text-black";
+    default:
+      return "text-black";
+  }
+};
+
+const getTypeTextColor = (type: AccountType): string => {
+  switch (type) {
+    case "Ingreso":
+      return "#1d4ed8";
+    case "Egreso":
+      return "#6d28d9";
+    case "Activo":
+      return "#15803d";
+    case "Pasivo":
+      return "#b91c1c";
+    case "Capital":
+      return "#000000";
+    default:
+      return "#000000";
+  }
+};
+
 export function MovementTable({
   title,
   lines,
   onLinesChange,
-  conceptOptions,
 }: MovementTableProps) {
   const [editableLines, setEditableLines] = useState<MovementLine[]>(lines);
   const [editingCellKey, setEditingCellKey] = useState<string | null>(null);
   const [editingDraft, setEditingDraft] = useState("");
   const [pendingFocusKey, setPendingFocusKey] = useState<string | null>(null);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
-  const availableConcepts = Array.from(
-    new Set([
-      ...DEFAULT_CONCEPT_OPTIONS,
-      ...(conceptOptions ?? []),
-      ...lines.map((line) => line.concepto),
-    ]),
+  const availableOptions = Array.from(
+    new Map(
+      [
+        ...ACCOUNT_OPTIONS,
+        ...lines.map((line) => ({ type: line.type, concepto: line.concepto })),
+      ].map((option) => [`${option.type}::${option.concepto}`, option]),
+    ).values(),
   );
 
   useEffect(() => {
@@ -103,12 +137,24 @@ export function MovementTable({
   }, [editableLines, pendingFocusKey]);
 
   const updateConceptLine = (index: number, value: string) => {
+    const selectedOption = availableOptions.find(
+      (option) => `${option.type}::${option.concepto}` === value,
+    );
+
+    if (!selectedOption) {
+      return;
+    }
+
     const nextLines = editableLines.map((line, lineIndex) => {
       if (lineIndex !== index) {
         return line;
       }
 
-      return { ...line, concepto: value };
+      return {
+        ...line,
+        type: selectedOption.type,
+        concepto: selectedOption.concepto,
+      };
     });
 
     setEditableLines(nextLines);
@@ -169,7 +215,8 @@ export function MovementTable({
 
   const addNewLine = () => {
     const newLine: MovementLine = {
-      concepto: availableConcepts[0] || "",
+      concepto: "Caja",
+      type: "Activo",
       cargo: "",
       abono: "",
     };
@@ -180,7 +227,8 @@ export function MovementTable({
 
   const addNewLineAndFocus = (focusField: NumericField) => {
     const newLine: MovementLine = {
-      concepto: availableConcepts[0] || "",
+      concepto: "Caja",
+      type: "Activo",
       cargo: "",
       abono: "",
     };
@@ -321,70 +369,17 @@ export function MovementTable({
         <Table>
           <TableHeader>
             <TableRow className="border-b bg-muted/50 hover:bg-muted/80">
+              <TableHead className="text-center font-semibold">
+                Opciones
+              </TableHead>
               <TableHead className="w-[50%] font-semibold">Concepto</TableHead>
               <TableHead className="text-right font-semibold">Cargo</TableHead>
               <TableHead className="text-right font-semibold">Abono</TableHead>
-              <TableHead className="text-center font-semibold">
-                Opcion
-              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {editableLines.map((line, index) => (
               <TableRow key={index} className="border-b last:border-0">
-                <TableCell className="font-medium">
-                  <select
-                    value={line.concepto}
-                    onChange={(event) =>
-                      updateConceptLine(index, event.target.value)
-                    }
-                    className="w-full rounded-md border border-border bg-background px-2 py-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    {availableConcepts.map((concept) => (
-                      <option key={concept} value={concept}>
-                        {concept}
-                      </option>
-                    ))}
-                  </select>
-                </TableCell>
-                <TableCell className="text-right tabular-nums">
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    ref={(element) => {
-                      inputRefs.current[getCellKey(index, "cargo")] = element;
-                    }}
-                    value={getInputDisplayValue(index, "cargo")}
-                    onFocus={() => handleNumericFocus(index, "cargo")}
-                    onChange={(event) =>
-                      handleNumericChange(event.target.value)
-                    }
-                    onKeyDown={(event) =>
-                      handleNumericKeyDown(event, index, "cargo")
-                    }
-                    onBlur={() => handleNumericBlur(index, "cargo")}
-                    className="w-full rounded-md border border-border bg-background px-2 py-1 text-right text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  />
-                </TableCell>
-                <TableCell className="text-right tabular-nums">
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    ref={(element) => {
-                      inputRefs.current[getCellKey(index, "abono")] = element;
-                    }}
-                    value={getInputDisplayValue(index, "abono")}
-                    onFocus={() => handleNumericFocus(index, "abono")}
-                    onChange={(event) =>
-                      handleNumericChange(event.target.value)
-                    }
-                    onKeyDown={(event) =>
-                      handleNumericKeyDown(event, index, "abono")
-                    }
-                    onBlur={() => handleNumericBlur(index, "abono")}
-                    className="w-full rounded-md border border-border bg-background px-2 py-1 text-right text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  />
-                </TableCell>
                 <TableCell className="text-center">
                   <div className="flex items-center justify-center gap-1">
                     <Button
@@ -426,6 +421,65 @@ export function MovementTable({
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
+                </TableCell>
+                <TableCell className="font-medium">
+                  <select
+                    value={`${line.type}::${line.concepto}`}
+                    onChange={(event) =>
+                      updateConceptLine(index, event.target.value)
+                    }
+                    className={`w-full rounded-md border border-border bg-background px-2 py-1 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring ${getTypeTextClass(line.type)}`}
+                    style={{ color: getTypeTextColor(line.type) }}
+                  >
+                    {availableOptions.map((option) => (
+                      <option
+                        key={`${option.type}::${option.concepto}`}
+                        value={`${option.type}::${option.concepto}`}
+                        className={getTypeTextClass(option.type)}
+                        style={{ color: getTypeTextColor(option.type) }}
+                      >
+                        {option.concepto}
+                      </option>
+                    ))}
+                  </select>
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    ref={(element) => {
+                      inputRefs.current[getCellKey(index, "cargo")] = element;
+                    }}
+                    value={getInputDisplayValue(index, "cargo")}
+                    onFocus={() => handleNumericFocus(index, "cargo")}
+                    onChange={(event) =>
+                      handleNumericChange(event.target.value)
+                    }
+                    onKeyDown={(event) =>
+                      handleNumericKeyDown(event, index, "cargo")
+                    }
+                    onBlur={() => handleNumericBlur(index, "cargo")}
+                    className="w-full rounded-md border border-border bg-background px-2 py-1 text-right text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  />
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    ref={(element) => {
+                      inputRefs.current[getCellKey(index, "abono")] = element;
+                    }}
+                    value={getInputDisplayValue(index, "abono")}
+                    onFocus={() => handleNumericFocus(index, "abono")}
+                    onChange={(event) =>
+                      handleNumericChange(event.target.value)
+                    }
+                    onKeyDown={(event) =>
+                      handleNumericKeyDown(event, index, "abono")
+                    }
+                    onBlur={() => handleNumericBlur(index, "abono")}
+                    className="w-full rounded-md border border-border bg-background px-2 py-1 text-right text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  />
                 </TableCell>
               </TableRow>
             ))}

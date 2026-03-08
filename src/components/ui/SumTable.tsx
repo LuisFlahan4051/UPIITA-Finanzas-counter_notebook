@@ -7,16 +7,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AccountType, AccountConcept } from "@/data/movements";
 
-interface MovementLine {
-  concepto: string;
-  cargo: number | string;
-  abono: number | string;
+interface SumRow {
+  movimiento: string;
+  concepto: AccountConcept;
+  type: AccountType;
+  cargo: number;
+  abono: number;
 }
 
 interface SumTableProps {
   title: string;
-  lines: MovementLine[];
+  rows: SumRow[];
 }
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
@@ -39,18 +42,27 @@ const formatCurrencyDisplay = (value: number | string): string => {
   return currencyFormatter.format(numericValue);
 };
 
-export function SumTable({ title, lines }: SumTableProps) {
-  const totalCargo = lines.reduce((sum, line) => {
-    const value = line.cargo;
-    const numericValue = typeof value === "number" ? value : 0;
-    return sum + numericValue;
-  }, 0);
+const getTypeTextClass = (type: AccountType): string => {
+  switch (type) {
+    case "Ingreso":
+      return "text-blue-700";
+    case "Egreso":
+      return "text-violet-700";
+    case "Activo":
+      return "text-green-700";
+    case "Pasivo":
+      return "text-red-700";
+    case "Capital":
+      return "text-black";
+    default:
+      return "text-black";
+  }
+};
 
-  const totalAbono = lines.reduce((sum, line) => {
-    const value = line.abono;
-    const numericValue = typeof value === "number" ? value : 0;
-    return sum + numericValue;
-  }, 0);
+export function SumTable({ title, rows }: SumTableProps) {
+  const totalCargo = rows.reduce((sum, row) => sum + row.cargo, 0);
+
+  const totalAbono = rows.reduce((sum, row) => sum + row.abono, 0);
 
   const saldo = totalCargo - totalAbono;
 
@@ -63,25 +75,34 @@ export function SumTable({ title, lines }: SumTableProps) {
         <Table>
           <TableHeader>
             <TableRow className="border-b bg-muted/50">
-              <TableHead className="w-[60%] font-semibold">Concepto</TableHead>
+              <TableHead className="w-[40%] font-semibold">
+                Movimiento
+              </TableHead>
+              <TableHead className="w-[30%] font-semibold">Concepto</TableHead>
               <TableHead className="text-right font-semibold">Cargo</TableHead>
               <TableHead className="text-right font-semibold">Abono</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {lines.map((line, index) => (
+            {rows.map((row, index) => (
               <TableRow key={index} className="border-b last:border-0">
-                <TableCell className="font-medium">{line.concepto}</TableCell>
-                <TableCell className="text-right tabular-nums">
-                  {formatCurrencyDisplay(line.cargo)}
+                <TableCell className="font-medium">{row.movimiento}</TableCell>
+                <TableCell
+                  className={`font-medium ${getTypeTextClass(row.type)}`}
+                >
+                  {row.concepto}
                 </TableCell>
                 <TableCell className="text-right tabular-nums">
-                  {formatCurrencyDisplay(line.abono)}
+                  {formatCurrencyDisplay(row.cargo)}
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {formatCurrencyDisplay(row.abono)}
                 </TableCell>
               </TableRow>
             ))}
             <TableRow className="border-t-2 border-border bg-muted/30 font-semibold">
               <TableCell className="font-semibold">Suma</TableCell>
+              <TableCell />
               <TableCell className="text-right tabular-nums">
                 {formatCurrencyDisplay(totalCargo)}
               </TableCell>
@@ -91,7 +112,7 @@ export function SumTable({ title, lines }: SumTableProps) {
             </TableRow>
             <TableRow className="border-t bg-muted/50 font-semibold">
               <TableCell className="font-semibold">Saldo</TableCell>
-              <TableCell className="text-right tabular-nums" colSpan={2}>
+              <TableCell className="text-right tabular-nums" colSpan={3}>
                 {formatCurrencyDisplay(saldo)}
               </TableCell>
             </TableRow>
