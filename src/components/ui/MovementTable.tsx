@@ -485,13 +485,13 @@ export function MovementTable({
             ))}
             <TableRow className="border-t-2 border-border bg-muted/30 font-semibold">
               <TableCell className="font-semibold">Suma</TableCell>
+              <TableCell />
               <TableCell className="text-right tabular-nums">
                 {formatCurrencyDisplay(totalCargo)}
               </TableCell>
               <TableCell className="text-right tabular-nums">
                 {formatCurrencyDisplay(totalAbono)}
               </TableCell>
-              <TableCell />
             </TableRow>
             <TableRow className="border-t bg-muted/50 font-semibold">
               <TableCell className="font-semibold">Saldo</TableCell>
