@@ -6,6 +6,8 @@ import {
   accountsTypes,
   AccountType,
   AccountConcept,
+  accountTypeForCuenta,
+  cuentaInicialActiva,
   movementsData,
   Movement,
   MovementLine,
@@ -36,7 +38,14 @@ function App() {
     const newMovement: Movement = {
       id: Date.now(),
       title: `Movimiento ${movements.length + 1}`,
-      lines: [{ concepto: "Caja", type: "Activo", cargo: "", abono: "" }],
+      lines: [
+        {
+          concepto: cuentaInicialActiva.nombre,
+          type: accountTypeForCuenta(cuentaInicialActiva),
+          cargo: "",
+          abono: "",
+        },
+      ],
     };
     setMovements([...movements, newMovement]);
   };
@@ -51,6 +60,12 @@ function App() {
           ? { ...movement, lines: updatedLines }
           : movement,
       ),
+    );
+  };
+
+  const handleDeleteMovement = (movementId: number) => {
+    setMovements((currentMovements) =>
+      currentMovements.filter((movement) => movement.id !== movementId),
     );
   };
 
@@ -256,6 +271,7 @@ function App() {
                   onLinesChange={(lines) =>
                     handleLinesChange(movement.id, lines)
                   }
+                  onDelete={() => handleDeleteMovement(movement.id)}
                 />
               ))}
             </div>

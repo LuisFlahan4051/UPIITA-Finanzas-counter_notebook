@@ -10,7 +10,14 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowDown, ArrowLeftRight, ArrowUp, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { accountsTypes, AccountType, MovementLine } from "@/data/movements";
+import {
+  accountsTypes,
+  AccountType,
+  accountTypeForCuenta,
+  cuentaPorNombre,
+  cuentaInicialActiva,
+  MovementLine,
+} from "@/data/movements";
 
 type NumericField = "cargo" | "abono";
 
@@ -18,14 +25,13 @@ interface MovementTableProps {
   title: string;
   lines: MovementLine[];
   onLinesChange?: (lines: MovementLine[]) => void;
+  onDelete?: () => void;
 }
 
 type AccountOption = {
-  [T in AccountType]: {
-    type: T;
-    concepto: (typeof accountsTypes)[T][number];
-  };
-}[AccountType];
+  type: AccountType;
+  concepto: string;
+};
 
 const ACCOUNT_OPTIONS: AccountOption[] = (
   Object.keys(accountsTypes) as AccountType[]
@@ -36,6 +42,10 @@ const ACCOUNT_OPTIONS: AccountOption[] = (
       concepto,
     })) as AccountOption[],
 );
+const DEFAULT_ACCOUNT_OPTION = {
+  concepto: cuentaInicialActiva.nombre,
+  type: accountTypeForCuenta(cuentaInicialActiva),
+};
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -78,24 +88,50 @@ const getTypeTextClass = (type: AccountType): string => {
     case "Pasivo":
       return "text-red-700";
     case "Capital":
-      return "text-black";
+      return "text-slate-700";
+    case "Auxiliar":
+      return "text-cyan-700";
     default:
       return "text-black";
   }
 };
 
-const getTypeTextColor = (type: AccountType): string => {
+const getTypeTextColor = (type: AccountType, concepto?: string): string => {
+  const cuenta = concepto ? cuentaPorNombre(concepto) : undefined;
+
   switch (type) {
     case "Ingreso":
       return "#1d4ed8";
     case "Egreso":
       return "#6d28d9";
     case "Activo":
-      return "#15803d";
+      switch (cuenta?.tipo) {
+        case "circulante":
+          return "#15803d";
+        case "fijo":
+          return "#166534";
+        case "diferido":
+          return "#4d7c0f";
+        case "contra_activo":
+          return "#166534";
+        default:
+          return "#15803d";
+      }
     case "Pasivo":
-      return "#b91c1c";
+      switch (cuenta?.tipo) {
+        case "circulante":
+          return "#b91c1c";
+        case "fijo":
+          return "#991b1b";
+        case "diferido":
+          return "#c2410c";
+        default:
+          return "#b91c1c";
+      }
     case "Capital":
-      return "#000000";
+      return "#334155";
+    case "Auxiliar":
+      return "#0e7490";
     default:
       return "#000000";
   }
@@ -105,6 +141,7 @@ export function MovementTable({
   title,
   lines,
   onLinesChange,
+  onDelete,
 }: MovementTableProps) {
   const [editableLines, setEditableLines] = useState<MovementLine[]>(lines);
   const [editingCellKey, setEditingCellKey] = useState<string | null>(null);
@@ -215,8 +252,8 @@ export function MovementTable({
 
   const addNewLine = () => {
     const newLine: MovementLine = {
-      concepto: "Caja",
-      type: "Activo",
+      concepto: DEFAULT_ACCOUNT_OPTION.concepto,
+      type: DEFAULT_ACCOUNT_OPTION.type,
       cargo: "",
       abono: "",
     };
@@ -227,8 +264,8 @@ export function MovementTable({
 
   const addNewLineAndFocus = (focusField: NumericField) => {
     const newLine: MovementLine = {
-      concepto: "Caja",
-      type: "Activo",
+      concepto: DEFAULT_ACCOUNT_OPTION.concepto,
+      type: DEFAULT_ACCOUNT_OPTION.type,
       cargo: "",
       abono: "",
     };
@@ -429,14 +466,16 @@ export function MovementTable({
                       updateConceptLine(index, event.target.value)
                     }
                     className={`w-full rounded-md border border-border bg-background px-2 py-1 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring ${getTypeTextClass(line.type)}`}
-                    style={{ color: getTypeTextColor(line.type) }}
+                    style={{ color: getTypeTextColor(line.type, line.concepto) }}
                   >
                     {availableOptions.map((option) => (
                       <option
                         key={`${option.type}::${option.concepto}`}
                         value={`${option.type}::${option.concepto}`}
                         className={getTypeTextClass(option.type)}
-                        style={{ color: getTypeTextColor(option.type) }}
+                        style={{
+                          color: getTypeTextColor(option.type, option.concepto),
+                        }}
                       >
                         {option.concepto}
                       </option>
@@ -501,7 +540,17 @@ export function MovementTable({
             </TableRow>
           </TableBody>
         </Table>
-        <div className="mt-3 flex justify-end">
+        <div className="mt-3 flex justify-end gap-2">
+          <Button
+            variant="outline"
+            size="icon-sm"
+            onClick={onDelete}
+            className="text-destructive hover:cursor-pointer hover:bg-destructive/10"
+            aria-label={`Eliminar tabla ${title}`}
+            title={`Eliminar tabla ${title}`}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
           <Button
             variant="outline"
             size="sm"

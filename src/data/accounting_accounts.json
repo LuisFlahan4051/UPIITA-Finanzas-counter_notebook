@@ -1,0 +1,316 @@
+  {
+  "cuentas_contables": {
+    "cuentas_de_balance": {
+      "activos": {
+        "circulantes": {
+          "cuentas":[
+            {
+              "nombre": "Bancos",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Dinero disponible en cuentas bancarias."
+            },
+            {
+              "nombre": "Almacén de Materia Prima",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Inventario de materiales directos (tela, plástico, ojos, relleno, etc.)."
+            },
+            {
+              "nombre": "Almacén de Productos Terminados",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Muñecos terminados listos para la venta."
+            },
+            {
+              "nombre": "Clientes",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Cuentas por cobrar a clientes por venta de muñecos a crédito."
+            },
+            {
+              "nombre": "Documentos por Cobrar",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Cuentas por cobrar a clientes respaldadas por un documento formal (letra de cambio, pagaré, etc.)."
+            },
+            {
+              "nombre": "Deudores Diversos",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Son las personas que deben al negocio por un concepto distinto al de venta de mercancías. Por ejemplo, al prestar dinero en efectivo; al vender a crédito cualquier valor que no sea mercancía, etc."
+            },
+            {
+              "nombre": "Papelería y Útiles",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Inventario de papelería y útiles de oficina."
+            },
+            {
+              "nombre": "IVA Acreditable",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "IVA pagado a proveedores por la empresa que se puede acreditar ante la autoridad fiscal."
+            },
+            {
+              "nombre": "IVA por Acreditar",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "IVA por pagar a proveedores. Aún no se ha acreditado formalmente, cuando compramos mercancías o servicios a crédito."
+            }
+          ],
+          "descripcion": "Son los activos que se espera convertir en efectivo, vender o consumir en el ciclo normal de operaciones de la empresa (generalmente un año)."
+        },
+        "fijos": {
+          "cuentas":[
+            {
+              "nombre": "Maquinaria y Equipo",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Maquinas de producción, equipos de manufactura, herramientas, etc."
+            },
+            {
+              "nombre": "Terrenos",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Terrenos propiedad de la empresa."
+            },{
+              "nombre": "Edificios",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Edificios propiedad de la empresa."
+            },
+            {
+              "nombre": "Mobiliario y Equipo de Oficina",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Escritorios, sillas, archiveros, mesas de juntas, libreros, equipos de oficina no informáticos (ejemplo: engrapadoras industriales, triturado de papel, etc.)."
+            },
+            {
+              "nombre": "Equipo de Cómputo",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Computadoras, laptops, servidores, impresoras, scanners, monitores, equipos de red, etc."
+            },
+            {
+              "nombre": "Equipo de Transporte",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Vehículos de uso más general: automóviles de gerentes, camionetas de supervisión, vehículos de personal, tráileres, etc."
+            },
+            {
+              "nombre": "Equipo de Reparto",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Vehículos dedicados a entregar mercancía a clientes (camionetas de reparto, vans de entrega, camiones de distribución)."
+            },
+            {
+              "nombre": "Depósitos en Garantía",
+              "naturaleza_saldo": "deudora",
+              "descripcion": "Depósitos realizados a terceros que se espera recuperar (por ejemplo, depósitos de renta de locales)."
+            }
+          ], 
+          "descripcion": "Son los activos que se espera que duren más de un año y que se utilizan para la operación de la empresa (no para vender)."
+        },
+        "contra_activos": {
+          "cuentas":[
+            {
+              "nombre": "Depreciación Acumulada de Maquinaria y Equipo",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Depreciación acumulada de maquinaria y equipo de producción."
+            },
+            {
+              "nombre": "Depreciación Acumulada de Equipo de Cómputo",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Depreciación acumulada de computadoras, laptops, servidores, impresoras, scanners, monitores, equipos de red, etc."
+            },
+            {
+              "nombre": "Depreciación Acumulada de Mobiliario y Equipo de Oficina",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Depreciación acumulada de escritorios, sillas, archiveros, mesas de juntas, libreros, equipos de oficina no informáticos (ejemplo: engrapadoras industriales, triturado de papel, etc.)."
+            },
+            {
+              "nombre": "Depreciación Acumulada de Equipo de Transporte",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Depreciación acumulada de vehículos de uso más general: automóviles de gerentes, camionetas de supervisión, vehículos de personal, tráileres, etc."
+            },
+            {
+              "nombre": "Depreciación Acumulada de Equipo de Reparto",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Depreciación acumulada de vehículos dedicados a entregar mercancía a clientes (camionetas de reparto, vans de entrega, camiones de distribución)."
+            },
+            {
+              "nombre": "Amortización Acumulada de Gastos de Instalación",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Amortización de Gastos de Instalación es el proceso mediante el cual se va reconociendo como gasto (en el Estado de Resultados) la parte proporcional de los Gastos de Instalación que ya se capitalizaron como activo."
+            }
+          ],
+          "descripcion": "Es como el “kilometraje” o el desgaste que ya le has contado a tu maquinaria o vehículos. No es algo que tengas, es algo que le restas al valor original del activo."
+        },
+      "diferido": {
+        "cuentas":[
+          {
+            "nombre": "Rentas Pagadas por Anticipado",
+            "naturaleza_saldo": "deudora",
+            "descripcion": "Pagos realizados por rentas que se recibirán en el futuro."
+          },
+          {
+            "nombre": "Publicidad Pagada por Anticipado",
+            "naturaleza_saldo": "deudora",
+            "descripcion": "Pagos realizados por publicidad que se recibirá en el futuro."
+          },
+          {
+            "nombre": "Gastos de instalacion",
+            "naturaleza_saldo": "deudora",
+            "descripcion": "Son todos los gastos que se realizan para acondicionar el local a las necesidades del negocio. Aunque se llama “Gastos de Instalación”, contablemente se trata como un activo diferido (o se capitaliza junto con el activo fijo), porque esos costos benefician a varios periodos, no solo al mes en que se pagaron."
+          },
+          {
+            "nombre": "Intereses Pagados por Anticipado",
+            "naturaleza_saldo": "deudora",
+            "descripcion": "Pagos realizados por intereses que se recibirán en el futuro."
+          },
+          {
+            "nombre": "Servicios Pagados por Anticipado o Primas de Seguros",
+            "naturaleza_saldo": "deudora",
+            "descripcion": "Pagos realizados por servicios que se recibirán en el futuro."
+          },
+          {
+            "nombre": "Seguros Pagados por Anticipado",
+            "naturaleza_saldo": "deudora",
+            "descripcion": "Pagos realizados por seguros que se recibirán en el futuro."
+          }
+        ],
+        "descripcion": "Es dinero que ya gastaste, pero que todavía no debes cargar completo al Estado de Resultados porque beneficia a varios periodos. Ejemplo: pagaste una póliza de seguro de $60,000 que cubre todo el año. Ese dinero lo registras primero como activo diferido y cada mes vas pasando $5,000 al gasto."}
+      },
+      "pasivos": {
+        "circulantes": {
+          "cuentas": [
+            {
+              "nombre": "Proveedores",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Deudas con proveedores de materia prima y materiales."
+            },
+            {
+              "nombre": "Acreedores Diversos",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Otras deudas a corto plazo (servicios, rentas, etc.)."
+            },
+            {
+              "nombre": "Documentos por Pagar",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Deudas a corto plazo respaldadas por un documento formal (letra de cambio, pagaré, etc.)."
+            },
+            {
+              "nombre": "Impuestos por Pagar",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Es una deuda real y exigible con la autoridad fiscal, generada por obligaciones tributarias ya devengadas y pendientes de pago."
+            },
+            {
+              "nombre": "IVA Trasladado",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "IVA que ya cobraste a tus clientes y que tienes la obligación de enterar (pagar) al SAT."
+            },
+            {
+              "nombre": "IVA por Trasladar",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "IVA de ventas que todavía no has trasladado formalmente (está pendiente de facturar o de registrarse en la declaración)."
+            }
+          ],
+        "descripcion": "Son las deudas que se espera liquidar en el ciclo normal de operaciones de la empresa (generalmente un año)."
+        },
+        "fijos":{
+          "cuentas": [
+            {
+              "nombre": "Documentos por Pagar a Largo Plazo",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Deudas a largo plazo respaldadas por un documento formal (letra de cambio, pagaré, etc.)."
+            },
+            {
+              "nombre": "Hipotecas por Pagar a Largo Plazo o Acreedores Hipotecarios",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Se deriva de una operación de crédito con un banco quedando en prenda un bien inmueble como el edificio."
+            }
+          ],
+          "descripcion": "Son las deudas que se contraen para hacer inversiones en el negocio con el fin de fortalecerlo. En este caso, los vencimientos de las obligaciones rebasan el año, por ejemplo, las hipotecas y documentos por pagar a largo plazo."
+        },
+        "diferido": {
+          "cuentas": [
+            {
+              "nombre": "Intereses Cobrados por Anticipado",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Representa la obligación de la empresa de 'dejar usar' el dinero prestado durante un tiempo por el cual ya cobró intereses"
+            },
+            {
+              "nombre": "Rentas Cobradas por Anticipado",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Representa la obligación de la empresa de 'dejar usar' un bien durante un tiempo por el cual ya cobró renta."
+            },
+            {
+              "nombre": "Servicios Cobrados por Anticipado",
+              "naturaleza_saldo": "acreedora",
+              "descripcion": "Representa la obligación de la empresa de 'prestar un servicio' durante un tiempo por el cual ya cobró."
+            }
+          ],
+          "descripcion": "Son deudas que se generarán en el futuro, pero que todavía no son exigibles. Ejemplo: cuando vendes a crédito, cobras el IVA a tus clientes, pero todavía no lo pagas al SAT. Ese IVA es una deuda diferida. a veces se denominan colectivamente créditos diferidos o ingresos diferidos. Sin embargo, en la presentación del balance, si su realización (devengo) ocurre dentro de un año, generalmente se incluyen en el pasivo circulante, y no se listan por separado como 'pasivo diferido'. El 'pasivo diferido' en el sentido estricto (como impuestos diferidos) tiene una naturaleza distinta a estos ingresos cobrados por anticipado."
+        }
+      },
+      "capital": [
+        {
+          "nombre": "Capital Social",
+          "naturaleza_saldo": "acreedora",
+          "descripcion": "Aportaciones de los dueños de la empresa o accionistas."
+        },
+        {
+          "nombre": "Perdidas y Ganancias",
+          "naturaleza_saldo": "acreedora",
+          "descripcion": "Esta cuenta se emplea anualmente para determinar el resultado de las operaciones del ente económico. Al finalizar el ejercicio se saldan las cuentas de resultados (ingresos, costos y gastos) y se traspasa su saldo a esta cuenta. En esta forma se obtiene un resultado, que representa la utilidad o pérdida obtenida por el ente económico. Si el saldo es acreedor, representa una utilidad, porque la suma de las cuentas de ingresos fue mayor que la suma de las cuentas de costos y gastos. Si el saldo es deudor representa una pérdida porque la suma de las cuentas de costos y gastos fue mayor que la suma de las cuentas de ingresos. La cancelación de las cuentas de resultados se hace únicamente al finalizar el ejercicio, a través de un asiento que se denomina 'Asiento de pérdidas y ganancias'"
+        }
+      ]
+    },
+    "cuentas_de_resultados": {
+      "ingresos": [
+        {
+          "nombre": "Ventas",
+          "naturaleza_saldo": "acreedora",
+          "descripcion": "Son las operaciones que realiza el comerciante con sus clientes y son consideradas como ingresos normales o propios del giro de la empresa."
+        },
+        {
+          "nombre": "Productos Financieros",
+          "naturaleza_saldo": "acreedora",
+          "descripcion": "Son los ingresos derivados de algunas operaciones financieras en ciertas instituciones o se generan por simple hecho de tener depositado el efectivo en determinadas cuentas con características específicas."
+        },
+        {
+          "nombre": "Otros Productos",
+          "naturaleza_saldo": "acreedora",
+          "descripcion": "Son los ingresos derivados de operaciones que no se identifican directamente con las actividades propias del ejercicio como pueden ser, cuando vendemos activos fijos o cuando se venden los desperdicios de producción o de material de empaque."
+        }
+      ],
+      "egresos": [
+        {
+          "nombre": "Costo de Ventas",
+          "naturaleza_saldo": "deudora",
+          "descripcion": "Se refiere al costo de los productos que ya han sido vendidos en el período actual. En empresas manufactureras, generalmente se calcula mediante: Inventario inicial de productos terminados + Costo de producción del período - Inventario final de productos terminados."
+        },
+        {
+          "nombre": "Costos de producción",
+          "naturaleza_saldo": "deudora",
+          "descripcion": "Es el costo total incurrido por la empresa para fabricar el producto, generalmente compuesto por tres elementos: materia prima directa, mano de obra directa y costos indirectos de fabricación."
+        },
+        {
+          "nombre": "Gastos de Administración (Operación)",
+          "naturaleza_saldo": "deudora",
+          "descripcion": "Gastos de la gestión administrativa (sueldos de oficina, papelería, luz, teléfono, aseo, etc.)."
+        },
+        {
+          "nombre": "Gastos de Venta (Operación)",
+          "naturaleza_saldo": "deudora",
+          "descripcion": "Son los gastos en que incurre la empresa para vender el producto, como sueldos del personal de ventas, comisiones, publicidad, alquiler de locales de venta, etc."
+        },
+        {
+          "nombre": "Gastos Financieros",
+          "naturaleza_saldo": "deudora",
+          "descripcion": "Generalmente estas erogaciones se derivan del manejo de dinero sobre todo en instituciones bancarias; y los más comunes son gastos y comisiones por manejo de cuenta, o los intereses que pagamos a los bancos por los créditos que no han concedido."
+        },
+        {
+          "nombre": "Otros Gastos",
+          "naturaleza_saldo": "deudora",
+          "descripcion": "Estos pagos se refieren a operaciones eventuales y que no se identifican con el giro principal de la empresa, se mencionan algunos que se consideran comunes de controla en esta cuenta: Perdida de venta de activos y donativos."
+        }
+      ]
+    },
+    "auxiliares": {
+      "cuentas": [
+        {
+        "nombre": "Producción en Proceso",
+        "naturaleza_saldo": "acreedora",
+        "descripcion": "Cuenta de orden/control que engloba y acumula los tres elementos del costo de producción: Materia Prima Directa + Mano de Obra Directa + Cargos Indirectos de Fabricación. Se utiliza para llevar el control de lo que está en proceso de fabricación de muñecos. Al finalizar el proceso se traslada a productos terminados o a costo de ventas. El profesor la clasifica como cuenta de orden necesaria para el Estado de Resultados."
+      }
+      ], 
+      "descripcion": "Son cuentas que se utilizan para llevar un control más detallado de las cuentas de resultados pero que mueren al finalizar el ejercicio por lo que no aparecen en el estado de resultados. Como por ejemplo la cuenta de producción en proceso."
+    }
+  }
+}

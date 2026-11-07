@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AccountType, AccountConcept } from "@/data/movements";
+import { AccountType, AccountConcept, cuentaPorNombre } from "@/data/movements";
 
 interface SumRow {
   movimiento: string;
@@ -53,10 +53,29 @@ const getTypeTextClass = (type: AccountType): string => {
     case "Pasivo":
       return "text-red-700";
     case "Capital":
-      return "text-black";
+      return "text-slate-700";
+    case "Auxiliar":
+      return "text-cyan-700";
     default:
       return "text-black";
   }
+};
+
+const getTypeTextColor = (type: AccountType, concepto: string): string => {
+  const cuenta = cuentaPorNombre(concepto);
+
+  if (type === "Ingreso") return "#1d4ed8";
+  if (type === "Egreso") return "#6d28d9";
+  if (type === "Capital") return "#334155";
+  if (type === "Auxiliar") return "#0e7490";
+  if (type === "Activo") {
+    if (cuenta?.tipo === "fijo" || cuenta?.tipo === "contra_activo") return "#166534";
+    if (cuenta?.tipo === "diferido") return "#4d7c0f";
+    return "#15803d";
+  }
+  if (cuenta?.tipo === "fijo") return "#991b1b";
+  if (cuenta?.tipo === "diferido") return "#c2410c";
+  return "#b91c1c";
 };
 
 export function SumTable({ title, rows }: SumTableProps) {
@@ -89,6 +108,7 @@ export function SumTable({ title, rows }: SumTableProps) {
                 <TableCell className="font-medium">{row.movimiento}</TableCell>
                 <TableCell
                   className={`font-medium ${getTypeTextClass(row.type)}`}
+                  style={{ color: getTypeTextColor(row.type, row.concepto) }}
                 >
                   {row.concepto}
                 </TableCell>

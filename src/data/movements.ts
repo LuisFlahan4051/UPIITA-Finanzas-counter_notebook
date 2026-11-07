@@ -1,89 +1,142 @@
-export const accountsTypes = {
-  Activo: [
-    "Caja",
-    "Banco",
-    "Almacén de producto terminado",
-    "Almacén de materia prima",
-    "Amortización 1",
-    "Amortización 2",
-    "Amortización 3",
-    "Amortización 4",
-    "Amortización 5",
-    "Amortización Acumulada 1",
-    "Amortización Acumulada 2",
-    "Amortización Acumulada 3",
-    "Amortización Acumulada 4",
-    "Amortización Acumulada 5",
-    "Clientes",
-    "Documentos por cobrar",
-    "Deudores diversos",
-    "Terrenos",
-    "Edificios",
-    "Mobiliario y equipo",
-    "Equipo de cómputo",
-    "Equipo de entrega o de reparto",
-    "Depósitos en garantía",
-    "Gastos de instalación",
-    "Papelería y útiles",
-    "Propaganda o publicidad",
-    "Primas de seguros",
-    "Rentas pagadas por anticipado",
-    "Intereses pagados por anticipado",
-    "Producción en proceso",
-    "Depreciación Acumulada de Maquinaria y Equipo",
-    "Depreciación Acumulada de Equipo de Reparto",
-    "IVA Acreditado",
-    "IVA por acreditar",
-  ],
-  Pasivo: [
-    "Proveedores",
-    "Documentos por pagar",
-    "Acreedores diversos",
-    "Acreedores hipotecarios (Hipotecas por pagar)",
-    "Intereses cobrados por anticipado",
-    "Rentas cobradas por anticipado",
-    "IVA Trasladado",
-    "IVA por pagar",
-  ],
-  Ingreso: [
-    "Ventas",
-    "Productos financieros",
-    "Otros productos",
-    "Producción en proceso",
-  ],
-  Egreso: [
-    "Costo de Ventas",
-    "Gasto de Mano de Obra Directa",
-    "Gastos de Operación:",
-    "Gastos de Administración",
-    "Gastos de Venta",
-    "Gastos Financieros",
-    "Otros Gastos",
-  ],
-  Capital: [
-    "Capital contable",
-    "Capital social",
-    "Capital ganado",
-    "Capital contribuido",
-    "Capital contable positivo",
-    "Capital contable negativo",
-    "Capital financiero",
-    "Pérdidas y ganancias",
-  ],
-  "Cuenta Orden": [
-    "Producción en proceso",
-  ],
-} as const;
+import data from "./accounting_accounts.json";
 
-export type AccountType = keyof typeof accountsTypes;
+// ======================
+// TIPOS
+// ======================
+export type NaturalezaSaldo = "deudora" | "acreedora";
+export type Categoria1 = "balance" | "resultados" | "auxiliar";
+export type Categoria2 =
+  | "activo"
+  | "pasivo"
+  | "capital"
+  | "ingreso"
+  | "egreso"
+  | "auxiliar";
+export type TipoCuenta = "circulante" | "fijo" | "contra_activo" | "diferido";
 
-export type AccountConcept = (typeof accountsTypes)[AccountType][number];
+export interface Cuenta {
+  id: string;
+  nombre: string;
+  naturaleza_saldo: NaturalezaSaldo;
+  descripcion: string;
+  categoria1: Categoria1;
+  categoria2: Categoria2;
+  tipo?: TipoCuenta; // solo aplica en activos y pasivos
+}
+
+// ======================
+// FORMA DEL JSON
+// (capital, ingresos y egresos son arreglos directos; el resto usa { cuentas, descripcion })
+// ======================
+type CuentaJson = Pick<Cuenta, "nombre" | "naturaleza_saldo" | "descripcion">;
+type GrupoJson = { cuentas: CuentaJson[]; descripcion: string };
+type Lista = CuentaJson[];
+
+interface DatosJson {
+  cuentas_contables: {
+    cuentas_de_balance: Record<string, Lista | Record<string, GrupoJson>>;
+    cuentas_de_resultados: Record<string, Lista>;
+    auxiliares: GrupoJson;
+  };
+}
+
+const raw = (data as unknown as DatosJson).cuentas_contables;
+
+// ======================
+// NORMALIZACIÓN DE LLAVES DEL JSON
+// ======================
+const CATEGORIA2: Record<string, Categoria2> = {
+  activos: "activo",
+  pasivos: "pasivo",
+  capital: "capital",
+  ingresos: "ingreso",
+  egresos: "egreso",
+};
+
+const TIPO: Record<string, TipoCuenta> = {
+  circulantes: "circulante",
+  fijos: "fijo",
+  contra_activos: "contra_activo",
+  diferido: "diferido"
+};
+
+// "Almacén de Materia Prima" -> "almacen_de_materia_prima"
+const slug = (s: string): string =>
+  s
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+
+const mapear = (
+  lista: CuentaJson[],
+  extra: Pick<Cuenta, "categoria1" | "categoria2"> & { tipo?: TipoCuenta }
+): Cuenta[] =>
+  lista.map((c) => ({
+    id: slug(c.nombre),
+    nombre: c.nombre,
+    naturaleza_saldo: c.naturaleza_saldo,
+    descripcion: c.descripcion,
+    ...extra,
+  }));
+
+// ======================
+// CONSTRUCCIÓN DINÁMICA
+// ======================
+const balance = Object.entries(raw.cuentas_de_balance).flatMap(
+  ([llave, valor]) => {
+    const categoria2 = CATEGORIA2[llave];
+    // capital: arreglo directo, sin tipo
+    if (Array.isArray(valor)) {
+      return mapear(valor, { categoria1: "balance", categoria2 });
+    }
+    // activos / pasivos: un grupo por tipo
+    return Object.entries(valor).flatMap(([llaveTipo, grupo]) =>
+      mapear(grupo.cuentas, {
+        categoria1: "balance",
+        categoria2,
+        tipo: TIPO[llaveTipo],
+      })
+    );
+  }
+);
+
+const resultados = Object.entries(raw.cuentas_de_resultados).flatMap(
+  ([llave, lista]) =>
+    mapear(lista, { categoria1: "resultados", categoria2: CATEGORIA2[llave] })
+);
+
+const auxiliares = mapear(raw.auxiliares.cuentas, {
+  categoria1: "auxiliar",
+  categoria2: "auxiliar",
+});
+
+export const cuentas: Cuenta[] = [...balance, ...resultados, ...auxiliares];
+
+// ======================
+// HELPERS OPCIONALES
+// ======================
+export const cuentaPorId = (id: string): Cuenta | undefined =>
+  cuentas.find((c) => c.id === id);
+
+export const filtrarCuentas = (f: Partial<Omit<Cuenta, "id" | "nombre" | "descripcion">>): Cuenta[] =>
+  cuentas.filter((c) => Object.entries(f).every(([k, v]) => c[k as keyof Cuenta] === v));
+
+export type AccountType =
+  | "Activo"
+  | "Pasivo"
+  | "Capital"
+  | "Ingreso"
+  | "Egreso"
+  | "Auxiliar";
+export type AccountConcept = string;
 
 export interface MovementLine {
   concepto: AccountConcept;
   type: AccountType;
-  cargo: number | string;
-  abono: number | string;
+  cargo: number | "";
+  abono: number | "";
 }
 
 export interface Movement {
@@ -92,181 +145,48 @@ export interface Movement {
   lines: MovementLine[];
 }
 
-export const movementsData: Movement[] = [
-  // {
-  //   id: 1,
-  //   title: "Movimiento 1",
-  //   lines: [
-  //     { concepto: "Banco", type: "Activo", cargo: 800000, abono: "" },
-  //     { concepto: "Mobiliario y equipo", type: "Activo", cargo: 750000, abono: "" },
-  //     { concepto: "Equipo de entrega o de reparto", type: "Activo", cargo: 250000, abono: "" },
-  //     { concepto: "Capital contable", type: "Capital", cargo: "", abono: 1800000 },
-  //   ],
-  // },
-  // {
-  //   id: 2,
-  //   title: "Movimiento 2",
-  //   lines: [
-  //     { concepto: "Rentas pagadas por anticipado", type: "Activo", cargo: 1800000, abono: "" },
-  //     { concepto: "IVA Acreditado", type: "Activo", cargo: 288000, abono: "" },
-  //     { concepto: "Banco", type: "Activo", cargo: "", abono: 2088000 },
-  //   ],
-  // },
-  // {
-  //   id: 3,
-  //   title: "Movimiento 3",
-  //   lines: [
-  //     { concepto: "Almacén de producto terminado", type: "Activo", cargo: 150000, abono: "" },
-  //     { concepto: "IVA Acreditado", type: "Activo", cargo: 24000, abono: "" },
-  //     { concepto: "Banco", type: "Activo", cargo: "", abono: 174000 },
-  //   ],
-  // },
-  // {
-  //   id: 4,
-  //   title: "Movimiento 4",
-  //   lines: [
-  //     { concepto: "Almacén de producto terminado", type: "Activo", cargo: 120000, abono: "" },
-  //     { concepto: "IVA Acreditado", type: "Activo", cargo: 19200, abono: "" },
-  //     { concepto: "Proveedores", type: "Pasivo", cargo: "", abono: 139200 },
-  //   ],
-  // },
-  // {
-  //   id: 5,
-  //   title: "Movimiento 5",
-  //   lines: [
-  //     { concepto: "Producción en proceso", type: "Activo", cargo: 96000, abono: "" },
-  //     { concepto: "Almacén de producto terminado", type: "Activo", cargo: "", abono: 96000 },
-  //   ],
-  // },
-  // {
-  //   id: 6,
-  //   title: "Movimiento 6",
-  //   lines: [
-  //     { concepto: "Producción en proceso", type: "Activo", cargo: 25000, abono: "" },
-  //     { concepto: "Gastos de Administración", type: "Egreso", cargo: 30000, abono: "" },
-  //     { concepto: "Gastos de Venta", type: "Egreso", cargo: 15000, abono: "" },
-  //     { concepto: "Banco", type: "Activo", cargo: "", abono: 70000 },
-  //   ],
-  // },
-  // {
-  //   id: 7,
-  //   title: "Movimiento 7",
-  //   lines: [
-  //     { concepto: "Gastos de Venta", type: "Egreso", cargo: "", abono: 10000 },
-  //     { concepto: "IVA Acreditado", type: "Activo", cargo: "", abono: 1600 },
-  //     { concepto: "Banco", type: "Activo", cargo: "", abono: 11600 },
-  //   ],
-  // },
-  // {
-  //   id: 8,
-  //   title: "Movimiento 8",
-  //   lines: [
-  //     { concepto: "Banco", type: "Activo", cargo: 5800, abono: "" },
-  //     { concepto: "Otros productos", type: "Ingreso", cargo: "", abono: 5000 },
-  //     { concepto: "IVA Trasladado", type: "Pasivo", cargo: "", abono: 800 },
-  //   ],
-  // },
-  // {
-  //   id: 9,
-  //   title: "Movimiento 9",
-  //   lines: [
-  //     { concepto: "Edificios", type: "Activo", cargo: "", abono: 58000 },
-  //     { concepto: "IVA Acreditado", type: "Activo", cargo: "", abono: 9280 },
-  //     { concepto: "Banco", type: "Activo", cargo: "", abono: 67280 },
-  //   ],
-  // },
-  // {
-  //   id: 10,
-  //   title: "Movimiento 10",
-  //   lines: [
-  //     { concepto: "Proveedores", type: "Pasivo", cargo: 139200, abono: "" },
-  //     { concepto: "Banco", type: "Activo", cargo: "", abono: 139200 },
-  //   ],
-  // },
-  // {
-  //   id: 11,
-  //   title: "Movimiento 11",
-  //   lines: [
-  //     { concepto: "Gastos de Venta", type: "Egreso", cargo: 9900, abono: "" },
-  //     { concepto: "Gastos de Administración", type: "Egreso", cargo: 9900, abono: "" },
-  //     { concepto: "Producción en proceso", type: "Cuenta Orden", cargo: 10200, abono: "" },
-  //     { concepto: "IVA Acreditado", type: "Activo", cargo: 4800, abono: "" },
-  //     { concepto: "Banco", type: "Activo", cargo: "", abono: 34800 },
-  //   ],
-  // },
-  // {
-  //   id: 12,
-  //   title: "Movimiento 12",
-  //   lines: [
-  //     { concepto: "Gastos de Administración", type: "Egreso", cargo: 150000, abono: "" },
-  //     { concepto: "Rentas pagadas por anticipado", type: "Activo", cargo: "", abono: 150000 },
-  //   ],
-  // },
-  // {
-  //   id: 13,
-  //   title: "Movimiento 13",
-  //   lines: [
-  //     { concepto: "Depreciación Acumulada de Maquinaria y Equipo", type: "Activo", cargo: "", abono: 6250 },
-  //     { concepto: "Depreciación Acumulada de Equipo de Reparto", type: "Activo", cargo: "", abono: 5208.33 },
-  //     { concepto: "Gastos de Venta", type: "Egreso", cargo: 528.33, abono: "" },
-  //     { concepto: "Producción en proceso", type: "Egreso", cargo: 6250, abono: "" },
-  //   ],
-  // },
-  // {
-  //   id: 14,
-  //   title: "Movimiento 14",
-  //   lines: [
-  //     { concepto: "Producción en proceso", type: "Ingreso", cargo: 25000, abono: "" },
-  //     { concepto: "Gastos de Venta", type: "Egreso", cargo: 15000, abono: "" },
-  //     { concepto: "Gastos de Administración", type: "Egreso", cargo: 30000, abono: "" },
-  //     { concepto: "Banco", type: "Activo", cargo: "", abono: 70000 },
-  //   ],
-  // },
-  // {
-  //   id: 15,
-  //   title: "Movimiento 15",
-  //   lines: [
-  //     { concepto: "Producción en proceso", type: "Ingreso", cargo: "", abono: 168033.33 },
-  //     { concepto: "Almacén de producto terminado", type: "Activo", cargo: 168033.33, abono: "" },
-  //   ],
-  // },
-  // {
-  //   id: 16,
-  //   title: "Movimiento 16",
-  //   lines: [
-  //     { concepto: "Banco", type: "Activo", cargo: 649600, abono: "" },
-  //     { concepto: "Ventas", type: "Ingreso", cargo: "", abono: 560000 },
-  //     { concepto: "IVA Trasladado", type: "Pasivo", cargo: "", abono: 89600 },
-  //     { concepto: "Almacén de producto terminado", type: "Activo", cargo: "", abono: 134426.40 },
-  //     { concepto: "Gastos de Venta", type: "Egreso", cargo: 134426.40, abono: "" },
-  //   ],
-  // },
-  // {
-  //   id: 17,
-  //   title: "Movimiento 17",
-  //   lines: [
-  //     { concepto: "Clientes", type: "Activo", cargo: 130500, abono: "" },
-  //     { concepto: "Ventas", type: "Ingreso", cargo: "", abono: 112500 },
-  //     { concepto: "IVA Trasladado", type: "Pasivo", cargo: "", abono: 18000 },
-  //     { concepto: "Almacén de producto terminado", type: "Activo", cargo: "", abono: 25204.95 },
-  //     { concepto: "Gastos de Venta", type: "Egreso", cargo: 25204.95, abono: "" },
-  //   ],
-  // },
-  // {
-  //   id: 18,
-  //   title: "Movimiento 18",
-  //   lines: [
-  //     { concepto: "Productos financieros", type: "Ingreso", cargo: "", abono: 6000 },
-  //     { concepto: "Banco", type: "Activo", cargo: 6000, abono: "" },
-  //   ],
-  // },
-  // {
-  //   id: 19,
-  //   title: "Movimiento 19",
-  //   lines: [
-  //     { concepto: "IVA Trasladado", type: "Pasivo", cargo: 108400, abono: "" },
-  //     { concepto: "IVA Acreditado", type: "Activo", cargo: "", abono: 346880 },
-  //     { concepto: "IVA por pagar", type: "Pasivo", cargo: 238480, abono: "" },
-  //   ],
-  // },
-];
+const tipoPorCategoria: Record<Categoria2, AccountType> = {
+  activo: "Activo",
+  pasivo: "Pasivo",
+  capital: "Capital",
+  ingreso: "Ingreso",
+  egreso: "Egreso",
+  auxiliar: "Auxiliar",
+};
+
+export const cuentaPorNombre = (nombre: string): Cuenta | undefined =>
+  cuentas.find((cuenta) => cuenta.nombre === nombre);
+
+export const accountTypeForCuenta = (cuenta: Cuenta): AccountType =>
+  tipoPorCategoria[cuenta.categoria2];
+
+export const cuentaInicialActiva = (() => {
+  const cuenta = cuentas.find((item) => item.categoria2 === "activo");
+  if (!cuenta) {
+    throw new Error("El catálogo no contiene cuentas de activo.");
+  }
+  return cuenta;
+})();
+
+export const accountsTypes: Record<AccountType, AccountConcept[]> = {
+  Activo: cuentas
+    .filter((cuenta) => cuenta.categoria2 === "activo")
+    .map((cuenta) => cuenta.nombre),
+  Pasivo: cuentas
+    .filter((cuenta) => cuenta.categoria2 === "pasivo")
+    .map((cuenta) => cuenta.nombre),
+  Capital: cuentas
+    .filter((cuenta) => cuenta.categoria2 === "capital")
+    .map((cuenta) => cuenta.nombre),
+  Ingreso: cuentas
+    .filter((cuenta) => cuenta.categoria2 === "ingreso")
+    .map((cuenta) => cuenta.nombre),
+  Egreso: cuentas
+    .filter((cuenta) => cuenta.categoria2 === "egreso")
+    .map((cuenta) => cuenta.nombre),
+  Auxiliar: cuentas
+    .filter((cuenta) => cuenta.categoria2 === "auxiliar")
+    .map((cuenta) => cuenta.nombre),
+};
+
+export const movementsData: Movement[] = [];
