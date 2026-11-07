@@ -1,0 +1,1064 @@
+{
+  "movements": [
+    {
+      "id": 1,
+      "title": "Movimiento 1",
+      "lines": [
+        {
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 800000,
+          "abono": ""
+        },
+        {
+          "concepto": "Mobiliario y equipo",
+          "type": "Activo",
+          "cargo": 750000,
+          "abono": ""
+        },
+        {
+          "concepto": "Equipo de entrega o de reparto",
+          "type": "Activo",
+          "cargo": 250000,
+          "abono": ""
+        },
+        {
+          "concepto": "Capital contable",
+          "type": "Capital",
+          "cargo": "",
+          "abono": 1800000
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Movimiento 2",
+      "lines": [
+        {
+          "concepto": "Rentas pagadas por anticipado",
+          "type": "Activo",
+          "cargo": 1800000,
+          "abono": ""
+        },
+        {
+          "concepto": "IVA Acreditado",
+          "type": "Activo",
+          "cargo": 288000,
+          "abono": ""
+        },
+        {
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 2088000
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Movimiento 3",
+      "lines": [
+        {
+          "concepto": "Almacén de producto terminado",
+          "type": "Activo",
+          "cargo": 150000,
+          "abono": ""
+        },
+        {
+          "concepto": "IVA Acreditado",
+          "type": "Activo",
+          "cargo": 24000,
+          "abono": ""
+        },
+        {
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 174000
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Movimiento 4",
+      "lines": [
+        {
+          "concepto": "Almacén de producto terminado",
+          "type": "Activo",
+          "cargo": 120000,
+          "abono": ""
+        },
+        {
+          "concepto": "IVA Acreditado",
+          "type": "Activo",
+          "cargo": 19200,
+          "abono": ""
+        },
+        {
+          "concepto": "Proveedores",
+          "type": "Pasivo",
+          "cargo": "",
+          "abono": 139200
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Movimiento 5",
+      "lines": [
+        {
+          "concepto": "Producción en proceso",
+          "type": "Activo",
+          "cargo": 96000,
+          "abono": ""
+        },
+        {
+          "concepto": "Almacén de producto terminado",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 96000
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Movimiento 6",
+      "lines": [
+        {
+          "concepto": "Producción en proceso",
+          "type": "Activo",
+          "cargo": 25000,
+          "abono": ""
+        },
+        {
+          "concepto": "Gastos de Administración",
+          "type": "Egreso",
+          "cargo": 30000,
+          "abono": ""
+        },
+        {
+          "concepto": "Gastos de Venta",
+          "type": "Egreso",
+          "cargo": 15000,
+          "abono": ""
+        },
+        {
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 70000
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Movimiento 7",
+      "lines": [
+        {
+          "concepto": "Gastos de Venta",
+          "type": "Egreso",
+          "cargo": "",
+          "abono": 10000
+        },
+        {
+          "concepto": "IVA Acreditado",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 1600
+        },
+        {
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 11600
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Movimiento 8",
+      "lines": [
+        {
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 5800,
+          "abono": ""
+        },
+        {
+          "concepto": "Otros productos",
+          "type": "Ingreso",
+          "cargo": "",
+          "abono": 5000
+        },
+        {
+          "concepto": "IVA Trasladado",
+          "type": "Pasivo",
+          "cargo": "",
+          "abono": 800
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Movimiento 9",
+      "lines": [
+        {
+          "concepto": "Edificios",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 58000
+        },
+        {
+          "concepto": "IVA Acreditado",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 9280
+        },
+        {
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 67280
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Movimiento 10",
+      "lines": [
+        {
+          "concepto": "Proveedores",
+          "type": "Pasivo",
+          "cargo": 139200,
+          "abono": ""
+        },
+        {
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 139200
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Movimiento 11",
+      "lines": [
+        {
+          "concepto": "Gastos de Venta",
+          "type": "Egreso",
+          "cargo": 9900,
+          "abono": ""
+        },
+        {
+          "concepto": "Gastos de Administración",
+          "type": "Egreso",
+          "cargo": 9900,
+          "abono": ""
+        },
+        {
+          "concepto": "Producción en proceso",
+          "type": "Cuenta Orden",
+          "cargo": 10200,
+          "abono": ""
+        },
+        {
+          "concepto": "IVA Acreditado",
+          "type": "Activo",
+          "cargo": 4800,
+          "abono": ""
+        },
+        {
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 34800
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Movimiento 12",
+      "lines": [
+        {
+          "concepto": "Gastos de Administración",
+          "type": "Egreso",
+          "cargo": 150000,
+          "abono": ""
+        },
+        {
+          "concepto": "Rentas pagadas por anticipado",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 150000
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "title": "Movimiento 13",
+      "lines": [
+        {
+          "concepto": "Depreciación Acumulada de Maquinaria y Equipo",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 6250
+        },
+        {
+          "concepto": "Depreciación Acumulada de Equipo de Reparto",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 5208.33
+        },
+        {
+          "concepto": "Gastos de Venta",
+          "type": "Egreso",
+          "cargo": 528.33,
+          "abono": ""
+        },
+        {
+          "concepto": "Producción en proceso",
+          "type": "Egreso",
+          "cargo": 6250,
+          "abono": ""
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Movimiento 14",
+      "lines": [
+        {
+          "concepto": "Producción en proceso",
+          "type": "Ingreso",
+          "cargo": 25000,
+          "abono": ""
+        },
+        {
+          "concepto": "Gastos de Venta",
+          "type": "Egreso",
+          "cargo": 15000,
+          "abono": ""
+        },
+        {
+          "concepto": "Gastos de Administración",
+          "type": "Egreso",
+          "cargo": 30000,
+          "abono": ""
+        },
+        {
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 70000
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "title": "Movimiento 15",
+      "lines": [
+        {
+          "concepto": "Producción en proceso",
+          "type": "Ingreso",
+          "cargo": "",
+          "abono": 168033.33
+        },
+        {
+          "concepto": "Almacén de producto terminado",
+          "type": "Activo",
+          "cargo": 168033.33,
+          "abono": ""
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "title": "Movimiento 16",
+      "lines": [
+        {
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 649600,
+          "abono": ""
+        },
+        {
+          "concepto": "Ventas",
+          "type": "Ingreso",
+          "cargo": "",
+          "abono": 560000
+        },
+        {
+          "concepto": "IVA Trasladado",
+          "type": "Pasivo",
+          "cargo": "",
+          "abono": 89600
+        },
+        {
+          "concepto": "Almacén de producto terminado",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 134426.4
+        },
+        {
+          "concepto": "Gastos de Venta",
+          "type": "Egreso",
+          "cargo": 134426.4,
+          "abono": ""
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "title": "Movimiento 17",
+      "lines": [
+        {
+          "concepto": "Clientes",
+          "type": "Activo",
+          "cargo": 130500,
+          "abono": ""
+        },
+        {
+          "concepto": "Ventas",
+          "type": "Ingreso",
+          "cargo": "",
+          "abono": 112500
+        },
+        {
+          "concepto": "IVA Trasladado",
+          "type": "Pasivo",
+          "cargo": "",
+          "abono": 18000
+        },
+        {
+          "concepto": "Almacén de producto terminado",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 25204.95
+        },
+        {
+          "concepto": "Gastos de Venta",
+          "type": "Egreso",
+          "cargo": 25204.95,
+          "abono": ""
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "title": "Movimiento 18",
+      "lines": [
+        {
+          "concepto": "Productos financieros",
+          "type": "Ingreso",
+          "cargo": "",
+          "abono": 6000
+        },
+        {
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 6000,
+          "abono": ""
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "title": "Movimiento 19",
+      "lines": [
+        {
+          "concepto": "IVA Trasladado",
+          "type": "Pasivo",
+          "cargo": 108400,
+          "abono": ""
+        },
+        {
+          "concepto": "IVA Acreditado",
+          "type": "Activo",
+          "cargo": "",
+          "abono": 346880
+        },
+        {
+          "concepto": "IVA por pagar",
+          "type": "Pasivo",
+          "cargo": 238480,
+          "abono": ""
+        }
+      ]
+    }
+  ],
+  "summaries": [
+    {
+      "key": "Activo::Banco",
+      "title": "Banco",
+      "rows": [
+        {
+          "movimiento": "Movimiento 1",
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 800000,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 2",
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 2088000
+        },
+        {
+          "movimiento": "Movimiento 3",
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 174000
+        },
+        {
+          "movimiento": "Movimiento 6",
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 70000
+        },
+        {
+          "movimiento": "Movimiento 7",
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 11600
+        },
+        {
+          "movimiento": "Movimiento 8",
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 5800,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 9",
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 67280
+        },
+        {
+          "movimiento": "Movimiento 10",
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 139200
+        },
+        {
+          "movimiento": "Movimiento 11",
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 34800
+        },
+        {
+          "movimiento": "Movimiento 14",
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 70000
+        },
+        {
+          "movimiento": "Movimiento 16",
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 649600,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 18",
+          "concepto": "Banco",
+          "type": "Activo",
+          "cargo": 6000,
+          "abono": 0
+        }
+      ]
+    },
+    {
+      "key": "Activo::Almacén de producto terminado",
+      "title": "Almacén de producto terminado",
+      "rows": [
+        {
+          "movimiento": "Movimiento 3",
+          "concepto": "Almacén de producto terminado",
+          "type": "Activo",
+          "cargo": 150000,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 4",
+          "concepto": "Almacén de producto terminado",
+          "type": "Activo",
+          "cargo": 120000,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 5",
+          "concepto": "Almacén de producto terminado",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 96000
+        },
+        {
+          "movimiento": "Movimiento 15",
+          "concepto": "Almacén de producto terminado",
+          "type": "Activo",
+          "cargo": 168033.33,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 16",
+          "concepto": "Almacén de producto terminado",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 134426.4
+        },
+        {
+          "movimiento": "Movimiento 17",
+          "concepto": "Almacén de producto terminado",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 25204.95
+        }
+      ]
+    },
+    {
+      "key": "Activo::Clientes",
+      "title": "Clientes",
+      "rows": [
+        {
+          "movimiento": "Movimiento 17",
+          "concepto": "Clientes",
+          "type": "Activo",
+          "cargo": 130500,
+          "abono": 0
+        }
+      ]
+    },
+    {
+      "key": "Activo::Edificios",
+      "title": "Edificios",
+      "rows": [
+        {
+          "movimiento": "Movimiento 9",
+          "concepto": "Edificios",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 58000
+        }
+      ]
+    },
+    {
+      "key": "Activo::Mobiliario y equipo",
+      "title": "Mobiliario y equipo",
+      "rows": [
+        {
+          "movimiento": "Movimiento 1",
+          "concepto": "Mobiliario y equipo",
+          "type": "Activo",
+          "cargo": 750000,
+          "abono": 0
+        }
+      ]
+    },
+    {
+      "key": "Activo::Equipo de entrega o de reparto",
+      "title": "Equipo de entrega o de reparto",
+      "rows": [
+        {
+          "movimiento": "Movimiento 1",
+          "concepto": "Equipo de entrega o de reparto",
+          "type": "Activo",
+          "cargo": 250000,
+          "abono": 0
+        }
+      ]
+    },
+    {
+      "key": "Activo::Rentas pagadas por anticipado",
+      "title": "Rentas pagadas por anticipado",
+      "rows": [
+        {
+          "movimiento": "Movimiento 2",
+          "concepto": "Rentas pagadas por anticipado",
+          "type": "Activo",
+          "cargo": 1800000,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 12",
+          "concepto": "Rentas pagadas por anticipado",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 150000
+        }
+      ]
+    },
+    {
+      "key": "Activo::IVA Acreditado",
+      "title": "IVA Acreditado",
+      "rows": [
+        {
+          "movimiento": "Movimiento 2",
+          "concepto": "IVA Acreditado",
+          "type": "Activo",
+          "cargo": 288000,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 3",
+          "concepto": "IVA Acreditado",
+          "type": "Activo",
+          "cargo": 24000,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 4",
+          "concepto": "IVA Acreditado",
+          "type": "Activo",
+          "cargo": 19200,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 7",
+          "concepto": "IVA Acreditado",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 1600
+        },
+        {
+          "movimiento": "Movimiento 9",
+          "concepto": "IVA Acreditado",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 9280
+        },
+        {
+          "movimiento": "Movimiento 11",
+          "concepto": "IVA Acreditado",
+          "type": "Activo",
+          "cargo": 4800,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 19",
+          "concepto": "IVA Acreditado",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 346880
+        }
+      ]
+    },
+    {
+      "key": "Activo::Producción en proceso",
+      "title": "Producción en proceso",
+      "rows": [
+        {
+          "movimiento": "Movimiento 5",
+          "concepto": "Producción en proceso",
+          "type": "Activo",
+          "cargo": 96000,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 6",
+          "concepto": "Producción en proceso",
+          "type": "Activo",
+          "cargo": 25000,
+          "abono": 0
+        }
+      ]
+    },
+    {
+      "key": "Activo::Depreciación Acumulada de Maquinaria y Equipo",
+      "title": "Depreciación Acumulada de Maquinaria y Equipo",
+      "rows": [
+        {
+          "movimiento": "Movimiento 13",
+          "concepto": "Depreciación Acumulada de Maquinaria y Equipo",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 6250
+        }
+      ]
+    },
+    {
+      "key": "Activo::Depreciación Acumulada de Equipo de Reparto",
+      "title": "Depreciación Acumulada de Equipo de Reparto",
+      "rows": [
+        {
+          "movimiento": "Movimiento 13",
+          "concepto": "Depreciación Acumulada de Equipo de Reparto",
+          "type": "Activo",
+          "cargo": 0,
+          "abono": 5208.33
+        }
+      ]
+    },
+    {
+      "key": "Pasivo::Proveedores",
+      "title": "Proveedores",
+      "rows": [
+        {
+          "movimiento": "Movimiento 4",
+          "concepto": "Proveedores",
+          "type": "Pasivo",
+          "cargo": 0,
+          "abono": 139200
+        },
+        {
+          "movimiento": "Movimiento 10",
+          "concepto": "Proveedores",
+          "type": "Pasivo",
+          "cargo": 139200,
+          "abono": 0
+        }
+      ]
+    },
+    {
+      "key": "Pasivo::IVA Trasladado",
+      "title": "IVA Trasladado",
+      "rows": [
+        {
+          "movimiento": "Movimiento 8",
+          "concepto": "IVA Trasladado",
+          "type": "Pasivo",
+          "cargo": 0,
+          "abono": 800
+        },
+        {
+          "movimiento": "Movimiento 16",
+          "concepto": "IVA Trasladado",
+          "type": "Pasivo",
+          "cargo": 0,
+          "abono": 89600
+        },
+        {
+          "movimiento": "Movimiento 17",
+          "concepto": "IVA Trasladado",
+          "type": "Pasivo",
+          "cargo": 0,
+          "abono": 18000
+        },
+        {
+          "movimiento": "Movimiento 19",
+          "concepto": "IVA Trasladado",
+          "type": "Pasivo",
+          "cargo": 108400,
+          "abono": 0
+        }
+      ]
+    },
+    {
+      "key": "Pasivo::IVA por pagar",
+      "title": "IVA por pagar",
+      "rows": [
+        {
+          "movimiento": "Movimiento 19",
+          "concepto": "IVA por pagar",
+          "type": "Pasivo",
+          "cargo": 238480,
+          "abono": 0
+        }
+      ]
+    },
+    {
+      "key": "Ingreso::Ventas",
+      "title": "Ventas",
+      "rows": [
+        {
+          "movimiento": "Movimiento 16",
+          "concepto": "Ventas",
+          "type": "Ingreso",
+          "cargo": 0,
+          "abono": 560000
+        },
+        {
+          "movimiento": "Movimiento 17",
+          "concepto": "Ventas",
+          "type": "Ingreso",
+          "cargo": 0,
+          "abono": 112500
+        }
+      ]
+    },
+    {
+      "key": "Ingreso::Productos financieros",
+      "title": "Productos financieros",
+      "rows": [
+        {
+          "movimiento": "Movimiento 18",
+          "concepto": "Productos financieros",
+          "type": "Ingreso",
+          "cargo": 0,
+          "abono": 6000
+        }
+      ]
+    },
+    {
+      "key": "Ingreso::Otros productos",
+      "title": "Otros productos",
+      "rows": [
+        {
+          "movimiento": "Movimiento 8",
+          "concepto": "Otros productos",
+          "type": "Ingreso",
+          "cargo": 0,
+          "abono": 5000
+        }
+      ]
+    },
+    {
+      "key": "Ingreso::Producción en proceso",
+      "title": "Producción en proceso",
+      "rows": [
+        {
+          "movimiento": "Movimiento 14",
+          "concepto": "Producción en proceso",
+          "type": "Ingreso",
+          "cargo": 25000,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 15",
+          "concepto": "Producción en proceso",
+          "type": "Ingreso",
+          "cargo": 0,
+          "abono": 168033.33
+        }
+      ]
+    },
+    {
+      "key": "Egreso::Gastos de Administración",
+      "title": "Gastos de Administración",
+      "rows": [
+        {
+          "movimiento": "Movimiento 6",
+          "concepto": "Gastos de Administración",
+          "type": "Egreso",
+          "cargo": 30000,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 11",
+          "concepto": "Gastos de Administración",
+          "type": "Egreso",
+          "cargo": 9900,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 12",
+          "concepto": "Gastos de Administración",
+          "type": "Egreso",
+          "cargo": 150000,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 14",
+          "concepto": "Gastos de Administración",
+          "type": "Egreso",
+          "cargo": 30000,
+          "abono": 0
+        }
+      ]
+    },
+    {
+      "key": "Egreso::Gastos de Venta",
+      "title": "Gastos de Venta",
+      "rows": [
+        {
+          "movimiento": "Movimiento 6",
+          "concepto": "Gastos de Venta",
+          "type": "Egreso",
+          "cargo": 15000,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 7",
+          "concepto": "Gastos de Venta",
+          "type": "Egreso",
+          "cargo": 0,
+          "abono": 10000
+        },
+        {
+          "movimiento": "Movimiento 11",
+          "concepto": "Gastos de Venta",
+          "type": "Egreso",
+          "cargo": 9900,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 13",
+          "concepto": "Gastos de Venta",
+          "type": "Egreso",
+          "cargo": 528.33,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 14",
+          "concepto": "Gastos de Venta",
+          "type": "Egreso",
+          "cargo": 15000,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 16",
+          "concepto": "Gastos de Venta",
+          "type": "Egreso",
+          "cargo": 134426.4,
+          "abono": 0
+        },
+        {
+          "movimiento": "Movimiento 17",
+          "concepto": "Gastos de Venta",
+          "type": "Egreso",
+          "cargo": 25204.95,
+          "abono": 0
+        }
+      ]
+    },
+    {
+      "key": "Egreso::Producción en proceso",
+      "title": "Producción en proceso",
+      "rows": [
+        {
+          "movimiento": "Movimiento 13",
+          "concepto": "Producción en proceso",
+          "type": "Egreso",
+          "cargo": 6250,
+          "abono": 0
+        }
+      ]
+    },
+    {
+      "key": "Capital::Capital contable",
+      "title": "Capital contable",
+      "rows": [
+        {
+          "movimiento": "Movimiento 1",
+          "concepto": "Capital contable",
+          "type": "Capital",
+          "cargo": 0,
+          "abono": 1800000
+        }
+      ]
+    },
+    {
+      "key": "Cuenta Orden::Producción en proceso",
+      "title": "Producción en proceso",
+      "rows": [
+        {
+          "movimiento": "Movimiento 11",
+          "concepto": "Producción en proceso",
+          "type": "Cuenta Orden",
+          "cargo": 10200,
+          "abono": 0
+        }
+      ]
+    }
+  ]
+}
