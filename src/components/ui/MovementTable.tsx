@@ -137,6 +137,24 @@ const getTypeTextColor = (type: AccountType, concepto?: string): string => {
   }
 };
 
+const getNatureSymbol = (concepto: string, accion: string): "+" | "-" | "" => {
+  const naturaleza = cuentaPorNombre(concepto)?.naturaleza_saldo;
+  if (naturaleza === "deudora") {
+    if (accion === "cargo") {
+      return "+";
+    } else if (accion === "abono") {
+      return "-";
+    }
+  } else if (naturaleza === "acreedora") {
+    if (accion === "cargo") {
+      return "-";
+    } else if (accion === "abono") {
+      return "+";
+    }
+  }
+  return "";
+};
+
 export function MovementTable({
   title,
   lines,
@@ -466,7 +484,9 @@ export function MovementTable({
                       updateConceptLine(index, event.target.value)
                     }
                     className={`w-full rounded-md border border-border bg-background px-2 py-1 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring ${getTypeTextClass(line.type)}`}
-                    style={{ color: getTypeTextColor(line.type, line.concepto) }}
+                    style={{
+                      color: getTypeTextColor(line.type, line.concepto),
+                    }}
                   >
                     {availableOptions.map((option) => (
                       <option
@@ -483,42 +503,58 @@ export function MovementTable({
                   </select>
                 </TableCell>
                 <TableCell className="text-right tabular-nums">
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    ref={(element) => {
-                      inputRefs.current[getCellKey(index, "cargo")] = element;
-                    }}
-                    value={getInputDisplayValue(index, "cargo")}
-                    onFocus={() => handleNumericFocus(index, "cargo")}
-                    onChange={(event) =>
-                      handleNumericChange(event.target.value)
-                    }
-                    onKeyDown={(event) =>
-                      handleNumericKeyDown(event, index, "cargo")
-                    }
-                    onBlur={() => handleNumericBlur(index, "cargo")}
-                    className="w-full rounded-md border border-border bg-background px-2 py-1 text-right text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      ref={(element) => {
+                        inputRefs.current[getCellKey(index, "cargo")] = element;
+                      }}
+                      value={getInputDisplayValue(index, "cargo")}
+                      onFocus={() => handleNumericFocus(index, "cargo")}
+                      onChange={(event) =>
+                        handleNumericChange(event.target.value)
+                      }
+                      onKeyDown={(event) =>
+                        handleNumericKeyDown(event, index, "cargo")
+                      }
+                      onBlur={() => handleNumericBlur(index, "cargo")}
+                      className="w-full rounded-md border border-border bg-background px-2 py-1 pr-7 text-right text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    />
+                    <span
+                      className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-xs font-semibold text-muted-foreground"
+                      aria-hidden="true"
+                    >
+                      {getNatureSymbol(line.concepto, "cargo")}
+                    </span>
+                  </div>
                 </TableCell>
                 <TableCell className="text-right tabular-nums">
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    ref={(element) => {
-                      inputRefs.current[getCellKey(index, "abono")] = element;
-                    }}
-                    value={getInputDisplayValue(index, "abono")}
-                    onFocus={() => handleNumericFocus(index, "abono")}
-                    onChange={(event) =>
-                      handleNumericChange(event.target.value)
-                    }
-                    onKeyDown={(event) =>
-                      handleNumericKeyDown(event, index, "abono")
-                    }
-                    onBlur={() => handleNumericBlur(index, "abono")}
-                    className="w-full rounded-md border border-border bg-background px-2 py-1 text-right text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      ref={(element) => {
+                        inputRefs.current[getCellKey(index, "abono")] = element;
+                      }}
+                      value={getInputDisplayValue(index, "abono")}
+                      onFocus={() => handleNumericFocus(index, "abono")}
+                      onChange={(event) =>
+                        handleNumericChange(event.target.value)
+                      }
+                      onKeyDown={(event) =>
+                        handleNumericKeyDown(event, index, "abono")
+                      }
+                      onBlur={() => handleNumericBlur(index, "abono")}
+                      className="w-full rounded-md border border-border bg-background px-2 py-1 pr-7 text-right text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    />
+                    <span
+                      className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-xs font-semibold text-muted-foreground"
+                      aria-hidden="true"
+                    >
+                      {getNatureSymbol(line.concepto, "abono")}
+                    </span>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
