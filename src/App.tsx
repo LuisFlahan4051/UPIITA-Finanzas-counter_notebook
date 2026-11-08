@@ -38,6 +38,8 @@ function App() {
     const newMovement: Movement = {
       id: Date.now(),
       title: `Movimiento ${movements.length + 1}`,
+      subtitle: "",
+      description: "",
       lines: [
         {
           concepto: cuentaInicialActiva.nombre,
@@ -66,6 +68,18 @@ function App() {
   const handleDeleteMovement = (movementId: number) => {
     setMovements((currentMovements) =>
       currentMovements.filter((movement) => movement.id !== movementId),
+    );
+  };
+
+  const handleMovementMetadataChange = (
+    movementId: number,
+    field: "subtitle" | "description",
+    value: string,
+  ) => {
+    setMovements((currentMovements) =>
+      currentMovements.map((movement) =>
+        movement.id === movementId ? { ...movement, [field]: value } : movement,
+      ),
     );
   };
 
@@ -185,8 +199,17 @@ function App() {
         throw new Error("No se encontraron movimientos en el archivo");
       }
 
+      // Completar metadatos ausentes en archivos exportados con versiones anteriores.
+      const normalizedMovements: Movement[] = importedMovements.map(
+        (movement: Movement) => ({
+          ...movement,
+          subtitle: movement.subtitle ?? "",
+          description: movement.description ?? "",
+        }),
+      );
+
       // Actualizar estado (las sumas se regeneran automáticamente)
-      setMovements(importedMovements);
+      setMovements(normalizedMovements);
 
       alert(
         `Importados ${importedMovements.length} movimiento(s) exitosamente`,
@@ -267,9 +290,25 @@ function App() {
                 <MovementTable
                   key={movement.id}
                   title={movement.title}
+                  subtitle={movement.subtitle}
+                  description={movement.description}
                   lines={movement.lines}
                   onLinesChange={(lines) =>
                     handleLinesChange(movement.id, lines)
+                  }
+                  onSubtitleChange={(subtitle) =>
+                    handleMovementMetadataChange(
+                      movement.id,
+                      "subtitle",
+                      subtitle,
+                    )
+                  }
+                  onDescriptionChange={(description) =>
+                    handleMovementMetadataChange(
+                      movement.id,
+                      "description",
+                      description,
+                    )
                   }
                   onDelete={() => handleDeleteMovement(movement.id)}
                 />

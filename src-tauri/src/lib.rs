@@ -15,6 +15,10 @@ struct Movement {
     #[allow(dead_code)]
     id: i64,
     title: String,
+    #[serde(default)]
+    subtitle: String,
+    #[serde(default)]
+    description: String,
     lines: Vec<MovementLine>,
 }
 
@@ -93,6 +97,14 @@ fn export_to_excel(
         // Escribir título del movimiento
         worksheet_movements
             .write_with_format(current_row, 0, &movement.title, &title_format)
+            .map_err(|e| e.to_string())?;
+        current_row += 1;
+        worksheet_movements
+            .write_with_format(current_row, 0, &movement.subtitle, &title_format)
+            .map_err(|e| e.to_string())?;
+        current_row += 1;
+        worksheet_movements
+            .write(current_row, 0, &movement.description)
             .map_err(|e| e.to_string())?;
         current_row += 1;
 

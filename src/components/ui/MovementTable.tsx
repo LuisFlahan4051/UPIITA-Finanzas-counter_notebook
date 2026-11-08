@@ -23,8 +23,12 @@ type NumericField = "cargo" | "abono";
 
 interface MovementTableProps {
   title: string;
+  subtitle: string;
+  description: string;
   lines: MovementLine[];
   onLinesChange?: (lines: MovementLine[]) => void;
+  onSubtitleChange?: (subtitle: string) => void;
+  onDescriptionChange?: (description: string) => void;
   onDelete?: () => void;
 }
 
@@ -155,10 +159,34 @@ const getNatureSymbol = (concepto: string, accion: string): "+" | "-" | "" => {
   return "";
 };
 
+const capitalize = (value: string): string =>
+  value.charAt(0).toUpperCase() + value.slice(1).replace("_", " ");
+
+const getAccountTooltip = (type: AccountType, concepto: string): string => {
+  const cuenta = cuentaPorNombre(concepto);
+  if (!cuenta) {
+    return type;
+  }
+
+  const categories: string[] = [type];
+  if (cuenta.tipo) {
+    categories.push(capitalize(cuenta.tipo));
+  }
+  categories.push(
+    cuenta.naturaleza_saldo === "deudora" ? "Saldo Deudor" : "Saldo Acreedor",
+  );
+
+  return `${categories.join("; ")}; ${cuenta.descripcion}`;
+};
+
 export function MovementTable({
   title,
+  subtitle,
+  description,
   lines,
   onLinesChange,
+  onSubtitleChange,
+  onDescriptionChange,
   onDelete,
 }: MovementTableProps) {
   const [editableLines, setEditableLines] = useState<MovementLine[]>(lines);
@@ -418,7 +446,25 @@ export function MovementTable({
   return (
     <Card className="border-border bg-card text-card-foreground shadow-sm">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+        <div className="flex items-start justify-between gap-4">
+          <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+          <input
+            type="text"
+            value={subtitle}
+            onChange={(event) => onSubtitleChange?.(event.target.value)}
+            placeholder="Subtítulo"
+            aria-label={`Subtítulo de ${title}`}
+            className="w-1/2 rounded-md border border-border bg-background px-2 py-1 text-right text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          />
+        </div>
+        <textarea
+          value={description}
+          onChange={(event) => onDescriptionChange?.(event.target.value)}
+          placeholder="Descripción del movimiento"
+          aria-label={`Descripción de ${title}`}
+          rows={2}
+          className="mt-2 w-full resize-y rounded-md border border-border bg-background px-2 py-1 text-sm text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        />
       </CardHeader>
       <CardContent>
         <Table>
@@ -487,6 +533,7 @@ export function MovementTable({
                     style={{
                       color: getTypeTextColor(line.type, line.concepto),
                     }}
+                    title={getAccountTooltip(line.type, line.concepto)}
                   >
                     {availableOptions.map((option) => (
                       <option
@@ -496,6 +543,7 @@ export function MovementTable({
                         style={{
                           color: getTypeTextColor(option.type, option.concepto),
                         }}
+                        title={getAccountTooltip(option.type, option.concepto)}
                       >
                         {option.concepto}
                       </option>

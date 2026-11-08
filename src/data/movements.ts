@@ -142,6 +142,8 @@ export interface MovementLine {
 export interface Movement {
   id: number;
   title: string;
+  subtitle: string;
+  description: string;
   lines: MovementLine[];
 }
 
