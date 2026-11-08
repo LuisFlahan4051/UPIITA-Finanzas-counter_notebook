@@ -7,7 +7,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AccountType, AccountConcept, cuentaPorNombre } from "@/data/movements";
+import {
+  AccountType,
+  AccountConcept,
+  cuentaPorNombre,
+  NaturalezaSaldo,
+} from "@/data/movements";
 
 interface SumRow {
   movimiento: string;
@@ -19,6 +24,7 @@ interface SumRow {
 
 interface SumTableProps {
   title: string;
+  naturalezaSaldo: NaturalezaSaldo;
   rows: SumRow[];
 }
 
@@ -78,12 +84,19 @@ const getTypeTextColor = (type: AccountType, concepto: string): string => {
   return "#b91c1c";
 };
 
-export function SumTable({ title, rows }: SumTableProps) {
+export function SumTable({
+  title,
+  naturalezaSaldo,
+  rows,
+}: SumTableProps) {
   const totalCargo = rows.reduce((sum, row) => sum + row.cargo, 0);
 
   const totalAbono = rows.reduce((sum, row) => sum + row.abono, 0);
 
-  const saldo = totalCargo - totalAbono;
+  const saldo =
+    naturalezaSaldo === "deudora"
+      ? totalCargo - totalAbono
+      : totalAbono - totalCargo;
 
   return (
     <Card className="border-border bg-card text-card-foreground shadow-sm">
@@ -132,8 +145,16 @@ export function SumTable({ title, rows }: SumTableProps) {
             </TableRow>
             <TableRow className="border-t bg-muted/50 font-semibold">
               <TableCell className="font-semibold">Saldo</TableCell>
-              <TableCell className="text-right tabular-nums" colSpan={3}>
-                {formatCurrencyDisplay(saldo)}
+              <TableCell />
+              <TableCell className="text-right tabular-nums">
+                {naturalezaSaldo === "deudora"
+                  ? formatCurrencyDisplay(saldo)
+                  : "—"}
+              </TableCell>
+              <TableCell className="text-right tabular-nums">
+                {naturalezaSaldo === "acreedora"
+                  ? formatCurrencyDisplay(saldo)
+                  : "—"}
               </TableCell>
             </TableRow>
           </TableBody>

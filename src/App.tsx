@@ -8,6 +8,7 @@ import {
   AccountConcept,
   accountTypeForCuenta,
   cuentaInicialActiva,
+  cuentaPorNombre,
   movementsData,
   Movement,
   MovementLine,
@@ -28,6 +29,7 @@ interface SumRow {
 interface ConceptSummary {
   key: string;
   title: string;
+  naturaleza_saldo: "deudora" | "acreedora";
   rows: SumRow[];
 }
 
@@ -260,6 +262,8 @@ function App() {
           summaries.push({
             key: `${type}::${concepto}`,
             title: concepto,
+            naturaleza_saldo:
+              cuentaPorNombre(concepto)?.naturaleza_saldo ?? "deudora",
             rows,
           });
         }
@@ -324,6 +328,7 @@ function App() {
                 <SumTable
                   key={summary.key}
                   title={summary.title}
+                  naturalezaSaldo={summary.naturaleza_saldo}
                   rows={summary.rows}
                 />
               ))}
