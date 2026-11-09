@@ -164,7 +164,18 @@
             "descripcion": "Pagos realizados por seguros que se recibirán en el futuro."
           }
         ],
-        "descripcion": "Es dinero que ya gastaste, pero que todavía no debes cargar completo al Estado de Resultados porque beneficia a varios periodos. Ejemplo: pagaste una póliza de seguro de $60,000 que cubre todo el año. Ese dinero lo registras primero como activo diferido y cada mes vas pasando $5,000 al gasto."}
+        "descripcion": "Es dinero que ya gastaste, pero que todavía no debes cargar completo al Estado de Resultados porque beneficia a varios periodos. Ejemplo: pagaste una póliza de seguro de $60,000 que cubre todo el año. Ese dinero lo registras primero como activo diferido y cada mes vas pasando $5,000 al gasto."
+        },
+        "auxiliares": {
+          "cuentas": [
+            {
+            "nombre": "Producción en Proceso",
+            "naturaleza_saldo": "deudora",
+            "descripcion": "Cuenta de orden/control de activo que engloba y acumula los tres elementos del costo de producción: Materia Prima Directa + Mano de Obra Directa + Cargos Indirectos de Fabricación. Se utiliza para llevar el control de lo que está en proceso de fabricación de muñecos. Al finalizar el proceso se traslada a productos terminados o a costo de ventas. Costo de los productos que están en fabricación y aún no están terminados. Su saldo es deudor y aparece en el balance general dentro del rubro de inventarios. Se abona con: el costo de la producción terminada, que se transfiere a Productos Terminados"
+          }
+          ], 
+          "descripcion": "Son cuentas que se utilizan para llevar un control más detallado de las cuentas de resultados pero que mueren al finalizar el ejercicio por lo que no aparecen en el estado de resultados. Como por ejemplo la cuenta de producción en proceso."
+        }
       },
       "pasivos": {
         "circulantes": {
@@ -273,20 +284,15 @@
         {
           "nombre": "Costo de Ventas",
           "naturaleza_saldo": "deudora",
-          "descripcion": "Se refiere al costo de los productos que ya han sido vendidos en el período actual. En empresas manufactureras, generalmente se calcula mediante: Inventario inicial de productos terminados + Costo de producción del período - Inventario final de productos terminados."
+          "descripcion": "Se refiere al costo de los productos que ya han sido vendidos en el período actual. En empresas manufactureras, generalmente se calcula mediante: Inventario inicial de productos terminados + Costo de producción del período - Inventario final de productos terminados. (Costo de producción de lo vendido), que es la porción del costo de producción que corresponde a los artículos que ya se vendieron."
         },
         {
-          "nombre": "Costos de producción",
-          "naturaleza_saldo": "deudora",
-          "descripcion": "Es el costo total incurrido por la empresa para fabricar el producto, generalmente compuesto por tres elementos: materia prima directa, mano de obra directa y costos indirectos de fabricación."
-        },
-        {
-          "nombre": "Gastos de Administración (Operación)",
+          "nombre": "Gastos de Administración (Operativo)",
           "naturaleza_saldo": "deudora",
           "descripcion": "Gastos de la gestión administrativa (sueldos de oficina, papelería, luz, teléfono, aseo, etc.)."
         },
         {
-          "nombre": "Gastos de Venta (Operación)",
+          "nombre": "Gastos de Venta (Operativo)",
           "naturaleza_saldo": "deudora",
           "descripcion": "Son los gastos en que incurre la empresa para vender el producto, como sueldos del personal de ventas, comisiones, publicidad, alquiler de locales de venta, etc."
         },
@@ -301,16 +307,6 @@
           "descripcion": "Estos pagos se refieren a operaciones eventuales y que no se identifican con el giro principal de la empresa, se mencionan algunos que se consideran comunes de controla en esta cuenta: Perdida de venta de activos y donativos."
         }
       ]
-    },
-    "auxiliares": {
-      "cuentas": [
-        {
-        "nombre": "Producción en Proceso",
-        "naturaleza_saldo": "acreedora",
-        "descripcion": "Cuenta de orden/control que engloba y acumula los tres elementos del costo de producción: Materia Prima Directa + Mano de Obra Directa + Cargos Indirectos de Fabricación. Se utiliza para llevar el control de lo que está en proceso de fabricación de muñecos. Al finalizar el proceso se traslada a productos terminados o a costo de ventas. El profesor la clasifica como cuenta de orden necesaria para el Estado de Resultados."
-      }
-      ], 
-      "descripcion": "Son cuentas que se utilizan para llevar un control más detallado de las cuentas de resultados pero que mueren al finalizar el ejercicio por lo que no aparecen en el estado de resultados. Como por ejemplo la cuenta de producción en proceso."
     }
   }
 }

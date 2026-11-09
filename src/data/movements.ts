@@ -36,7 +36,7 @@ interface DatosJson {
   cuentas_contables: {
     cuentas_de_balance: Record<string, Lista | Record<string, GrupoJson>>;
     cuentas_de_resultados: Record<string, Lista>;
-    auxiliares: GrupoJson;
+    auxiliares?: GrupoJson;
   };
 }
 
@@ -91,14 +91,22 @@ const balance = Object.entries(raw.cuentas_de_balance).flatMap(
     if (Array.isArray(valor)) {
       return mapear(valor, { categoria1: "balance", categoria2 });
     }
-    // activos / pasivos: un grupo por tipo
-    return Object.entries(valor).flatMap(([llaveTipo, grupo]) =>
-      mapear(grupo.cuentas, {
+    // activos / pasivos: un grupo por tipo. Un grupo auxiliar puede vivir
+    // dentro de activos y conserva su propia categoría contable.
+    return Object.entries(valor).flatMap(([llaveTipo, grupo]) => {
+      if (llaveTipo === "auxiliares") {
+        return mapear(grupo.cuentas, {
+          categoria1: "auxiliar",
+          categoria2: "auxiliar",
+        });
+      }
+
+      return mapear(grupo.cuentas, {
         categoria1: "balance",
         categoria2,
         tipo: TIPO[llaveTipo],
-      })
-    );
+      });
+    });
   }
 );
 
@@ -107,10 +115,12 @@ const resultados = Object.entries(raw.cuentas_de_resultados).flatMap(
     mapear(lista, { categoria1: "resultados", categoria2: CATEGORIA2[llave] })
 );
 
-const auxiliares = mapear(raw.auxiliares.cuentas, {
-  categoria1: "auxiliar",
-  categoria2: "auxiliar",
-});
+const auxiliares = raw.auxiliares
+  ? mapear(raw.auxiliares.cuentas, {
+      categoria1: "auxiliar",
+      categoria2: "auxiliar",
+    })
+  : [];
 
 export const cuentas: Cuenta[] = [...balance, ...resultados, ...auxiliares];
 

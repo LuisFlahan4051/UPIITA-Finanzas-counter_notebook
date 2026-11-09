@@ -51,7 +51,8 @@ El proyecto usa **React + TypeScript** en el frontend y **Tauri + Rust** en el b
 src/
 	App.tsx                          # Contenedor principal, estado y acciones de export/import
 	data/
-		movements.ts                   # Catalogo de cuentas y tipos TypeScript
+    accounting_accounts.json       # Calsificación de las cuentas contables (similar a mapa conceptual)
+    movements.ts                   # Genera un catalogo de cuentas y tipos TypeScript partiendo del json
 	components/
 		ui/
 			MovementTable.tsx            # Captura/edicion de movimientos
@@ -132,13 +133,15 @@ El export genera un archivo con esta estructura:
 {
   "movements": [
     {
-      "id": 1,
+      "id": 1794133188559,
       "title": "Movimiento 1",
+      "subtitle": "",
+      "description": "",
       "lines": [
         {
-          "concepto": "Caja",
+          "concepto": "Bancos",
           "type": "Activo",
-          "cargo": 1000,
+          "cargo": 100000,
           "abono": ""
         }
       ]
@@ -146,14 +149,15 @@ El export genera un archivo con esta estructura:
   ],
   "summaries": [
     {
-      "key": "Activo::Caja",
-      "title": "Caja",
+      "key": "Activo::Bancos",
+      "title": "Bancos",
+      "naturaleza_saldo": "deudora",
       "rows": [
         {
           "movimiento": "Movimiento 1",
-          "concepto": "Caja",
+          "concepto": "Bancos",
           "type": "Activo",
-          "cargo": 1000,
+          "cargo": 100000,
           "abono": 0
         }
       ]

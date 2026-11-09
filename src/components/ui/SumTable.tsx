@@ -67,28 +67,48 @@ const getTypeTextClass = (type: AccountType): string => {
   }
 };
 
-const getTypeTextColor = (type: AccountType, concepto: string): string => {
-  const cuenta = cuentaPorNombre(concepto);
+const getTypeTextColor = (type: AccountType, concepto?: string): string => {
+  const cuenta = concepto ? cuentaPorNombre(concepto) : undefined;
 
-  if (type === "Ingreso") return "#1d4ed8";
-  if (type === "Egreso") return "#6d28d9";
-  if (type === "Capital") return "#334155";
-  if (type === "Auxiliar") return "#0e7490";
-  if (type === "Activo") {
-    if (cuenta?.tipo === "fijo" || cuenta?.tipo === "contra_activo") return "#166534";
-    if (cuenta?.tipo === "diferido") return "#4d7c0f";
-    return "#15803d";
+  switch (type) {
+    case "Ingreso":
+      return "#1d4ed8";
+    case "Egreso":
+      return "#6d28d9";
+    case "Activo":
+      switch (cuenta?.tipo) {
+        case "circulante":
+          return "#18b652";
+        case "fijo":
+          return "#156433";
+        case "diferido":
+          return "#63a50d";
+        case "contra_activo":
+          return "#325703";
+        default:
+          return "#18b652";
+      }
+    case "Pasivo":
+      switch (cuenta?.tipo) {
+        case "circulante":
+          return "#d31919";
+        case "fijo":
+          return "#741414";
+        case "diferido":
+          return "#c2410c";
+        default:
+          return "#b91c1c";
+      }
+    case "Capital":
+      return "#123b25";
+    case "Auxiliar":
+      return "#00f729";
+    default:
+      return "#000000";
   }
-  if (cuenta?.tipo === "fijo") return "#991b1b";
-  if (cuenta?.tipo === "diferido") return "#c2410c";
-  return "#b91c1c";
 };
 
-export function SumTable({
-  title,
-  naturalezaSaldo,
-  rows,
-}: SumTableProps) {
+export function SumTable({ title, naturalezaSaldo, rows }: SumTableProps) {
   const totalCargo = rows.reduce((sum, row) => sum + row.cargo, 0);
 
   const totalAbono = rows.reduce((sum, row) => sum + row.abono, 0);

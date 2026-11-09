@@ -111,22 +111,22 @@ const getTypeTextColor = (type: AccountType, concepto?: string): string => {
     case "Activo":
       switch (cuenta?.tipo) {
         case "circulante":
-          return "#15803d";
+          return "#18b652";
         case "fijo":
-          return "#166534";
+          return "#156433";
         case "diferido":
-          return "#4d7c0f";
+          return "#63a50d";
         case "contra_activo":
-          return "#166534";
+          return "#325703";
         default:
-          return "#15803d";
+          return "#18b652";
       }
     case "Pasivo":
       switch (cuenta?.tipo) {
         case "circulante":
-          return "#b91c1c";
+          return "#d31919";
         case "fijo":
-          return "#991b1b";
+          return "#741414";
         case "diferido":
           return "#c2410c";
         default:
@@ -135,7 +135,7 @@ const getTypeTextColor = (type: AccountType, concepto?: string): string => {
     case "Capital":
       return "#334155";
     case "Auxiliar":
-      return "#0e7490";
+      return "#00f729";
     default:
       return "#000000";
   }
@@ -454,7 +454,7 @@ export function MovementTable({
             onChange={(event) => onSubtitleChange?.(event.target.value)}
             placeholder="Subtítulo"
             aria-label={`Subtítulo de ${title}`}
-            className="w-1/2 rounded-md border border-border bg-background px-2 py-1 text-right text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="w-1/2 rounded-md border border-border bg-background px-2 py-1 text-left text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring"
           />
         </div>
         <textarea
