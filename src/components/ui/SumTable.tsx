@@ -15,6 +15,7 @@ import {
 } from "@/data/movements";
 
 interface SumRow {
+  movementId: number;
   movimiento: number;
   concepto: string;
   cuenta: AccountConcept;
@@ -28,6 +29,7 @@ interface SumTableProps {
   title: string;
   naturalezaSaldo: NaturalezaSaldo;
   rows: SumRow[];
+  onMovementClick?: (movementId: number) => void;
 }
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
@@ -110,7 +112,12 @@ const getTypeTextColor = (type: AccountType, concepto?: string): string => {
   }
 };
 
-export function SumTable({ title, naturalezaSaldo, rows }: SumTableProps) {
+export function SumTable({
+  title,
+  naturalezaSaldo,
+  rows,
+  onMovementClick,
+}: SumTableProps) {
   const totalCargo = rows.reduce((sum, row) => sum + row.cargo, 0);
 
   const totalAbono = rows.reduce((sum, row) => sum + row.abono, 0);
@@ -147,9 +154,18 @@ export function SumTable({ title, naturalezaSaldo, rows }: SumTableProps) {
               <TableRow key={index} className="border-b last:border-0">
                 <TableCell className="font-medium">{row.movimiento}</TableCell>
                 <TableCell
-                  className={`font-medium ${getTypeTextClass(row.type)}`}
                   style={{ color: getTypeTextColor(row.type, row.cuenta) }}
                   title={row.descripcion || undefined}
+                  onClick={() => onMovementClick?.(row.movementId)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      onMovementClick?.(row.movementId);
+                    }
+                  }}
+                  role={onMovementClick ? "button" : undefined}
+                  tabIndex={onMovementClick ? 0 : undefined}
+                  className={`cursor-pointer font-medium ${getTypeTextClass(row.type)}`}
                 >
                   {row.concepto}
                 </TableCell>

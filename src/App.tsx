@@ -1,5 +1,5 @@
 import "./App.css";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { MovementTable } from "./components/ui/MovementTable";
 import { SumTable } from "./components/ui/SumTable";
 import {
@@ -20,6 +20,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { save, open } from "@tauri-apps/plugin-dialog";
 
 interface SumRow {
+  movementId: number;
   movimiento: number;
   concepto: string;
   cuenta: AccountConcept;
@@ -293,6 +294,7 @@ function App() {
             );
 
             return {
+              movementId: movement.id,
               movimiento: getMovementNumber(movement.title),
               concepto: movement.subtitle || concepto,
               cuenta: concepto,
@@ -323,6 +325,18 @@ function App() {
     return summaries;
   }, [movements]);
 
+  const movementRefs = useRef<Record<number, HTMLDivElement | null>>({});
+
+  const focusMovement = (movementId: number) => {
+    const movementElement = movementRefs.current[movementId];
+    if (!movementElement) {
+      return;
+    }
+
+    movementElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    movementElement.focus({ preventScroll: true });
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground p-6">
       <div className="max-w-8xl mx-auto space-y-8">
@@ -342,6 +356,9 @@ function App() {
             <div className="space-y-6">
               {movements.map((movement) => (
                 <MovementTable
+                  movementRef={(element) => {
+                    movementRefs.current[movement.id] = element;
+                  }}
                   key={movement.id}
                   title={movement.title}
                   subtitle={movement.subtitle}
@@ -380,6 +397,7 @@ function App() {
                   title={summary.title}
                   naturalezaSaldo={summary.naturaleza_saldo}
                   rows={summary.rows}
+                  onMovementClick={focusMovement}
                 />
               ))}
             </div>

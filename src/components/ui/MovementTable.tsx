@@ -30,6 +30,7 @@ interface MovementTableProps {
   onSubtitleChange?: (subtitle: string) => void;
   onDescriptionChange?: (description: string) => void;
   onDelete?: () => void;
+  movementRef?: (element: HTMLDivElement | null) => void;
 }
 
 type AccountOption = {
@@ -188,6 +189,7 @@ export function MovementTable({
   onSubtitleChange,
   onDescriptionChange,
   onDelete,
+  movementRef,
 }: MovementTableProps) {
   const [editableLines, setEditableLines] = useState<MovementLine[]>(lines);
   const [editingCellKey, setEditingCellKey] = useState<string | null>(null);
@@ -444,7 +446,11 @@ export function MovementTable({
   const saldo = totalCargo - totalAbono;
 
   return (
-    <Card className="border-border bg-card text-card-foreground shadow-sm">
+    <Card
+      ref={movementRef}
+      tabIndex={-1}
+      className="border-border bg-card text-card-foreground shadow-sm"
+    >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-4">
           <CardTitle className="text-lg font-semibold">{title}</CardTitle>

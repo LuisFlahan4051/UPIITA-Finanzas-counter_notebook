@@ -213,11 +213,11 @@ fn export_to_excel(
                 &with_outer_border(&header_format, false, false, true, false),
             )
             .map_err(|e| e.to_string())?;
-            if !movement.description.is_empty() {
+        if !movement.description.is_empty() {
             worksheet_movements
                 .insert_note(current_row, 0, &Note::new(movement.description.clone()))
                 .map_err(|e| e.to_string())?;
-            }
+        }
         worksheet_movements
             .write_with_format(
                 current_row,
@@ -258,12 +258,7 @@ fn export_to_excel(
                 false,
             );
             worksheet_movements
-                .write_with_format(
-                    current_row,
-                    0,
-                    &line.concepto,
-                    &concept_format,
-                )
+                .write_with_format(current_row, 0, &line.concepto, &concept_format)
                 .map_err(|e| e.to_string())?;
             let nature_format = Format::new();
             worksheet_movements
@@ -374,15 +369,13 @@ fn export_to_excel(
     for summary in summaries.iter() {
         // Escribir título del concepto en las celdas de cuatro columnas y centrarlo
         let summary_title_format = with_outer_border(
-            &title_format
-                .clone()
-                .set_font_color(account_color(
-                    &summary.account_type,
-                    summary
-                        .rows
-                        .first()
-                        .and_then(|row| row.tipo_cuenta.as_deref()),
-                )),
+            &title_format.clone().set_font_color(account_color(
+                &summary.account_type,
+                summary
+                    .rows
+                    .first()
+                    .and_then(|row| row.tipo_cuenta.as_deref()),
+            )),
             true,
             false,
             true,
@@ -405,7 +398,7 @@ fn export_to_excel(
 
         // Escribir encabezados
         worksheet_sums
-            .write_with_format(sum_row, 0, "Movimiento", &summary_header_left)
+            .write_with_format(sum_row, 0, "Mov.", &summary_header_left)
             .map_err(|e| e.to_string())?;
         worksheet_sums
             .write_with_format(sum_row, 1, "Concepto", &summary_header_inner)
@@ -422,16 +415,16 @@ fn export_to_excel(
 
         // Escribir filas de datos
         for row in summary.rows.iter() {
-            let concept_format = Format::new().set_font_color(account_color(
-                &row.account_type,
-                row.tipo_cuenta.as_deref(),
-            ));
+            let concept_format = Format::new()
+                .set_font_color(account_color(&row.account_type, row.tipo_cuenta.as_deref()));
             worksheet_sums
+                // Texto centrado en celda movimiento.
                 .write_with_format(
                     sum_row,
                     0,
                     row.movimiento,
-                    &with_outer_border(&Format::new(), false, false, true, false),
+                    &with_outer_border(&Format::new(), false, false, true, false)
+                        .set_align(FormatAlign::Center),
                 )
                 .map_err(|e| e.to_string())?;
             worksheet_sums
@@ -476,10 +469,8 @@ fn export_to_excel(
             .map_err(|e| e.to_string())?;
 
         let sum_data_end = sum_row - 1;
-        let sum_cargo_formula =
-            format!("=SUM(C{}:C{})", sum_data_start + 1, sum_data_end + 1);
-        let sum_abono_formula =
-            format!("=SUM(D{}:D{})", sum_data_start + 1, sum_data_end + 1);
+        let sum_cargo_formula = format!("=SUM(C{}:C{})", sum_data_start + 1, sum_data_end + 1);
+        let sum_abono_formula = format!("=SUM(D{}:D{})", sum_data_start + 1, sum_data_end + 1);
 
         worksheet_sums
             .write_formula_with_format(
