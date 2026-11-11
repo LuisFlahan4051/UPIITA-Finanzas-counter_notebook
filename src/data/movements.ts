@@ -145,6 +145,8 @@ export type AccountConcept = string;
 export interface MovementLine {
   concepto: AccountConcept;
   type: AccountType;
+  naturaleza_saldo?: NaturalezaSaldo;
+  tipo_cuenta?: TipoCuenta;
   cargo: number | "";
   abono: number | "";
 }

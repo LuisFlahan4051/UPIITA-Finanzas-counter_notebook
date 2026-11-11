@@ -6,6 +6,10 @@ struct MovementLine {
     concepto: String,
     #[serde(rename = "type")]
     account_type: String,
+    #[serde(default)]
+    naturaleza_saldo: Option<String>,
+    #[serde(default)]
+    tipo_cuenta: Option<String>,
     cargo: serde_json::Value,
     abono: serde_json::Value,
 }
@@ -24,11 +28,20 @@ struct Movement {
 
 #[derive(Debug, Deserialize)]
 struct SumRow {
-    movimiento: String,
+    movimiento: i64,
     concepto: String,
-    #[serde(rename = "type")]
+    #[serde(default)]
     #[allow(dead_code)]
+    cuenta: String,
+    #[serde(default)]
+    descripcion: String,
+    #[serde(rename = "type")]
     account_type: String,
+    #[serde(default)]
+    #[allow(dead_code)]
+    naturaleza_saldo: String,
+    #[serde(default)]
+    tipo_cuenta: Option<String>,
     cargo: f64,
     abono: f64,
 }
@@ -38,9 +51,41 @@ struct ConceptSummary {
     #[allow(dead_code)]
     key: String,
     title: String,
+    #[serde(rename = "type", default)]
+    account_type: String,
     #[serde(default = "default_naturaleza_saldo")]
     naturaleza_saldo: String,
     rows: Vec<SumRow>,
+}
+
+fn account_nature_label(naturaleza_saldo: &Option<String>) -> &str {
+    match naturaleza_saldo.as_deref() {
+        Some("acreedora") => "acreedor",
+        _ => "deudor",
+    }
+}
+
+fn account_color(account_type: &str, tipo_cuenta: Option<&str>) -> Color {
+    match account_type {
+        "Ingreso" => Color::RGB(0x1D4ED8),
+        "Egreso" => Color::RGB(0x6D28D9),
+        "Activo" => match tipo_cuenta {
+            Some("circulante") => Color::RGB(0x18B652),
+            Some("fijo") => Color::RGB(0x156433),
+            Some("diferido") => Color::RGB(0x63A50D),
+            Some("contra_activo") => Color::RGB(0x325703),
+            _ => Color::RGB(0x18B652),
+        },
+        "Pasivo" => match tipo_cuenta {
+            Some("circulante") => Color::RGB(0xD31919),
+            Some("fijo") => Color::RGB(0x741414),
+            Some("diferido") => Color::RGB(0xC2410C),
+            _ => Color::RGB(0xB91C1C),
+        },
+        "Capital" => Color::RGB(0x334155),
+        "Auxiliar" => Color::RGB(0x00F729),
+        _ => Color::Black,
+    }
 }
 
 fn default_naturaleza_saldo() -> String {
@@ -168,6 +213,11 @@ fn export_to_excel(
                 &with_outer_border(&header_format, false, false, true, false),
             )
             .map_err(|e| e.to_string())?;
+            if !movement.description.is_empty() {
+            worksheet_movements
+                .insert_note(current_row, 0, &Note::new(movement.description.clone()))
+                .map_err(|e| e.to_string())?;
+            }
         worksheet_movements
             .write_with_format(
                 current_row,
@@ -197,16 +247,32 @@ fn export_to_excel(
         // Escribir datos
         let data_start_row = current_row;
         for line in movement.lines.iter() {
+            let concept_format = with_outer_border(
+                &Format::new().set_font_color(account_color(
+                    &line.account_type,
+                    line.tipo_cuenta.as_deref(),
+                )),
+                false,
+                false,
+                true,
+                false,
+            );
             worksheet_movements
                 .write_with_format(
                     current_row,
                     0,
                     &line.concepto,
-                    &with_outer_border(&Format::new(), false, false, true, false),
+                    &concept_format,
                 )
                 .map_err(|e| e.to_string())?;
+            let nature_format = Format::new();
             worksheet_movements
-                .write_with_format(current_row, 1, &line.account_type, &Format::new())
+                .write_with_format(
+                    current_row,
+                    1,
+                    account_nature_label(&line.naturaleza_saldo),
+                    &nature_format,
+                )
                 .map_err(|e| e.to_string())?;
 
             // Convertir cargo a número
@@ -307,7 +373,21 @@ fn export_to_excel(
     // Iterar sobre cada concepto y apilarlos verticalmente
     for summary in summaries.iter() {
         // Escribir título del concepto en las celdas de cuatro columnas y centrarlo
-        let summary_title_format = with_outer_border(&title_format, true, false, true, true);
+        let summary_title_format = with_outer_border(
+            &title_format
+                .clone()
+                .set_font_color(account_color(
+                    &summary.account_type,
+                    summary
+                        .rows
+                        .first()
+                        .and_then(|row| row.tipo_cuenta.as_deref()),
+                )),
+            true,
+            false,
+            true,
+            true,
+        );
         let summary_header_left = with_outer_border(&header_format, false, false, true, false);
         let summary_header_inner = with_outer_border(&header_format, false, false, false, false);
         let summary_header_right = with_outer_border(&header_format, false, false, false, true);
@@ -342,17 +422,26 @@ fn export_to_excel(
 
         // Escribir filas de datos
         for row in summary.rows.iter() {
+            let concept_format = Format::new().set_font_color(account_color(
+                &row.account_type,
+                row.tipo_cuenta.as_deref(),
+            ));
             worksheet_sums
                 .write_with_format(
                     sum_row,
                     0,
-                    &row.movimiento,
+                    row.movimiento,
                     &with_outer_border(&Format::new(), false, false, true, false),
                 )
                 .map_err(|e| e.to_string())?;
             worksheet_sums
-                .write_with_format(sum_row, 1, &row.concepto, &Format::new())
+                .write_with_format(sum_row, 1, &row.concepto, &concept_format)
                 .map_err(|e| e.to_string())?;
+            if !row.descripcion.is_empty() {
+                worksheet_sums
+                    .insert_note(sum_row, 1, &Note::new(row.descripcion.clone()))
+                    .map_err(|e| e.to_string())?;
+            }
             worksheet_sums
                 .write_with_format(sum_row, 2, row.cargo, &number_format)
                 .map_err(|e| e.to_string())?;

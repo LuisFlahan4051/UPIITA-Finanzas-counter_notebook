@@ -15,8 +15,10 @@ import {
 } from "@/data/movements";
 
 interface SumRow {
-  movimiento: string;
-  concepto: AccountConcept;
+  movimiento: number;
+  concepto: string;
+  cuenta: AccountConcept;
+  descripcion: string;
   type: AccountType;
   cargo: number;
   abono: number;
@@ -121,16 +123,21 @@ export function SumTable({ title, naturalezaSaldo, rows }: SumTableProps) {
   return (
     <Card className="border-border bg-card text-card-foreground shadow-sm">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+        <CardTitle
+          className="text-lg font-semibold"
+          style={{
+            color: getTypeTextColor(rows[0]?.type ?? "Auxiliar", rows[0]?.cuenta),
+          }}
+        >
+          {title}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow className="border-b bg-muted/50">
-              <TableHead className="w-[40%] font-semibold">
-                Movimiento
-              </TableHead>
-              <TableHead className="w-[30%] font-semibold">Concepto</TableHead>
+              <TableHead className="w-[10%] font-semibold">Mov</TableHead>
+              <TableHead className="w-[40%] font-semibold">Concepto</TableHead>
               <TableHead className="text-right font-semibold">Cargo</TableHead>
               <TableHead className="text-right font-semibold">Abono</TableHead>
             </TableRow>
@@ -141,7 +148,8 @@ export function SumTable({ title, naturalezaSaldo, rows }: SumTableProps) {
                 <TableCell className="font-medium">{row.movimiento}</TableCell>
                 <TableCell
                   className={`font-medium ${getTypeTextClass(row.type)}`}
-                  style={{ color: getTypeTextColor(row.type, row.concepto) }}
+                  style={{ color: getTypeTextColor(row.type, row.cuenta) }}
+                  title={row.descripcion || undefined}
                 >
                   {row.concepto}
                 </TableCell>

@@ -6,6 +6,7 @@ import {
   accountsTypes,
   AccountType,
   AccountConcept,
+  TipoCuenta,
   accountTypeForCuenta,
   cuentaInicialActiva,
   cuentaPorNombre,
@@ -19,9 +20,13 @@ import { invoke } from "@tauri-apps/api/core";
 import { save, open } from "@tauri-apps/plugin-dialog";
 
 interface SumRow {
-  movimiento: string;
-  concepto: AccountConcept;
+  movimiento: number;
+  concepto: string;
+  cuenta: AccountConcept;
+  descripcion: string;
   type: AccountType;
+  naturaleza_saldo: "deudora" | "acreedora";
+  tipo_cuenta: TipoCuenta | undefined;
   cargo: number;
   abono: number;
 }
@@ -29,9 +34,15 @@ interface SumRow {
 interface ConceptSummary {
   key: string;
   title: string;
+  type: AccountType;
   naturaleza_saldo: "deudora" | "acreedora";
   rows: SumRow[];
 }
+
+const getMovementNumber = (title: string): number => {
+  const match = title.match(/^Movimiento\s+(\d+)$/);
+  return match ? Number(match[1]) : 0;
+};
 
 function App() {
   const [movements, setMovements] = useState<Movement[]>(movementsData);
@@ -46,6 +57,8 @@ function App() {
         {
           concepto: cuentaInicialActiva.nombre,
           type: accountTypeForCuenta(cuentaInicialActiva),
+          naturaleza_saldo: cuentaInicialActiva.naturaleza_saldo,
+          tipo_cuenta: cuentaInicialActiva.tipo,
           cargo: "",
           abono: "",
         },
@@ -100,9 +113,21 @@ function App() {
 
       if (!filePath) return; // Usuario canceló
 
+      const movementsForExport = movements.map((movement) => ({
+        ...movement,
+        lines: movement.lines.map((line) => {
+          const cuenta = cuentaPorNombre(line.concepto);
+          return {
+            ...line,
+            naturaleza_saldo: cuenta?.naturaleza_saldo,
+            tipo_cuenta: cuenta?.tipo,
+          };
+        }),
+      }));
+
       // Enviar datos a Rust para generar Excel
       await invoke("export_to_excel", {
-        movements: movements,
+        movements: movementsForExport,
         summaries: conceptSummaries,
         filePath: filePath,
       });
@@ -131,7 +156,17 @@ function App() {
 
       // Crear objeto con movimientos y sumas
       const exportData = {
-        movements: movements,
+        movements: movements.map((movement) => ({
+          ...movement,
+          lines: movement.lines.map((line) => {
+            const cuenta = cuentaPorNombre(line.concepto);
+            return {
+              ...line,
+              naturaleza_saldo: cuenta?.naturaleza_saldo,
+              tipo_cuenta: cuenta?.tipo,
+            };
+          }),
+        })),
         summaries: conceptSummaries,
       };
 
@@ -207,6 +242,15 @@ function App() {
           ...movement,
           subtitle: movement.subtitle ?? "",
           description: movement.description ?? "",
+          lines: movement.lines.map((line) => {
+            const cuenta = cuentaPorNombre(line.concepto);
+            return {
+              ...line,
+              naturaleza_saldo:
+                line.naturaleza_saldo ?? cuenta?.naturaleza_saldo,
+              tipo_cuenta: line.tipo_cuenta ?? cuenta?.tipo,
+            };
+          }),
         }),
       );
 
@@ -249,9 +293,14 @@ function App() {
             );
 
             return {
-              movimiento: movement.title,
-              concepto,
+              movimiento: getMovementNumber(movement.title),
+              concepto: movement.subtitle || concepto,
+              cuenta: concepto,
+              descripcion: movement.description,
               type,
+              naturaleza_saldo:
+                cuentaPorNombre(concepto)?.naturaleza_saldo ?? "deudora",
+              tipo_cuenta: cuentaPorNombre(concepto)?.tipo,
               cargo,
               abono,
             };
@@ -262,6 +311,7 @@ function App() {
           summaries.push({
             key: `${type}::${concepto}`,
             title: concepto,
+            type,
             naturaleza_saldo:
               cuentaPorNombre(concepto)?.naturaleza_saldo ?? "deudora",
             rows,

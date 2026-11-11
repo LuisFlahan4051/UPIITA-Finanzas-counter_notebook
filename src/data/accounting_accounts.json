@@ -196,7 +196,7 @@
               "descripcion": "Deudas a corto plazo respaldadas por un documento formal (letra de cambio, pagaré, etc.)."
             },
             {
-              "nombre": "Impuestos por Pagar",
+              "nombre": "IVA por Pagar",
               "naturaleza_saldo": "acreedora",
               "descripcion": "Es una deuda real y exigible con la autoridad fiscal, generada por obligaciones tributarias ya devengadas y pendientes de pago."
             },
